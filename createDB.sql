@@ -1,0 +1,1 @@
+ CREATE TABLE users (id bigint(20) primary key auto_increment, aai varchar(256) unique, firstname varchar(256), lastname varchar(256), metadata longtext, email varchar(256), phone varchar(24), status int(10)) character set = utf8mb4, auto_increment=714482; 

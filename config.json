@@ -1,0 +1,10 @@
+{
+    "environment": "development",
+    "database": {
+        "type": "mysql",
+        "host": "localhost",
+        "user": "cmzum",
+        "password": "123456",
+        "database": "zumcm"
+    }
+}
