@@ -1,0 +1,11 @@
+body,html{
+    background-color:#f8f9fa;
+    margin: 0;
+}
+
+.flow-container{
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+}

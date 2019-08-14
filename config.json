@@ -6,5 +6,7 @@
         "user": "cmzum",
         "password": "123456",
         "database": "zumcm"
-    }
+    },
+    "locale": "hr",
+    "logoURL": "https://znanstvenikumeni.org/cdn/img/zum-logo-black.png"
 }
