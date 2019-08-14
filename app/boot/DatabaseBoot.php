@@ -7,3 +7,4 @@ try{
 {
     throw new Exception('Database connection error: '.$exception);
 }
+$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
