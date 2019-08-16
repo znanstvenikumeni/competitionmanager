@@ -12,7 +12,27 @@ function validateAAI(){
         $('.stepOne').css('display', 'none');
     }
 }
-
+function continueToPersonal(){
+    if(!($('#email').val() && $('#phone').val())){
+        $('#email').addClass('is-invalid');
+        $('#phone').addClass('is-invalid');
+        $('.phoneHelp').css('display', 'block');
+    }
+    else{
+        $('.stepThree').css('display', 'block');
+        $('.stepTwo').css('display', 'none');
+    }
+}
+function continueSave() {
+    if (!($('#firstName').val() && $('#lastName').val() && $('#password').val())) {
+        $('#firstName').addClass('is-invalid');
+        $('#lastName').addClass('is-invalid');
+        $('#password').addClass('is-invalid');
+        $('.dataHelp').css('display', 'block');
+    } else {
+        $('#signup').submit();
+    }
+}
 
 const element = document.querySelector('form');
 element.addEventListener('submit', event => {

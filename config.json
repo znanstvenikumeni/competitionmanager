@@ -8,5 +8,8 @@
         "database": "zumcm"
     },
     "locale": "hr",
-    "logoURL": "https://znanstvenikumeni.org/cdn/img/zum-logo-black.png"
+    "logoURL": "https://znanstvenikumeni.org/cdn/img/zum-logo-black.png",
+    "defaultSessionValidity": 3,
+    "cookiedomain": "cmzum.local",
+    "sslAvailable": false
 }

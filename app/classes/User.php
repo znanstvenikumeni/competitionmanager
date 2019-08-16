@@ -20,7 +20,6 @@ class User{
     }
 
     public function save(){
-        echo 2;
         if($this->newUser){
             return $this->saveNewUser();
         }
@@ -29,8 +28,26 @@ class User{
         }
     }
 
+    public function load(){
+        $query = "SELECT * FROM users WHERE aai=:aai LIMIT 1";
+        $params['aai'] = $this->aai;
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params);
+        $user = $statement->fetch(PDO::FETCH_ASSOC);
+        $this->id = $user['id'];
+        $this->password = $user['password'];
+        $this->firstName = $user['firstname'];
+        $this->lastName = $user['lastname'];
+        $this->metadata = $user['metadata'];
+        $this->email = $user['email'];
+        $this->phone = $user['phone'];
+        $this->status = $user['status'];
+
+        $this->passwordHash = $this->password;
+
+    }
+
     private function prepareData(){
-        echo 4;
         if(!$this->status){
             $this->status = 1;
         }
@@ -55,23 +72,11 @@ class User{
         return $params;
     }
     private function saveNewUser(){
-        echo 3;
         $params = $this->prepareData();
-        var_dump($params);
         $query = "INSERT INTO users VALUES (null, :aai, :password, :firstName, :lastName, :metadata, :email, :phone, :status)";
-        try{
         $statement = $this->conn->prepare($query);
-        }
-        catch(Exception $e){
-            var_dump($e);
-        }
-        try{
         $statement->execute($params);
-        }
-        catch(Exception $e){
-            var_dump($e);
-        }
-        var_dump($statement, $this->conn, $params, $this->conn->errorInfo());
+        $this->id = $this->conn->lastInsertId();
     }
 
 

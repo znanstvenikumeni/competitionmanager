@@ -1,12 +1,12 @@
 <?php
 class Token{
     private $conn;
-    private $token;
-    private $user;
-    private $session;
-    private $used;
-    private $usableOn;
-    private $data;
+    public $token;
+    public $user;
+    public $session;
+    public $used;
+    public $usableOn;
+    public $data;
 
     public function __construct(\PDO $pdo, $token = null, $user=null, $session=null, $usableOn=null) {
         $this->conn = $pdo;
@@ -22,7 +22,26 @@ class Token{
             $this->set();
             $this->insert();
         }
-        return $token;
+        return $this->token;
+    }
+    public function load(){
+        $query = "SELECT * FROM tokens WHERE token=:token LIMIT 1";
+        $params['token'] = $this->token;
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params);
+        $token = $statement->fetch(PDO::FETCH_ASSOC);
+        $this->user = $token['user'];
+        $this->session = $token['session'];
+        $this->used = $token['used'];
+        $this->usableOn = $token['usableOn'];
+        $this->data = $token['data'];
+    }
+    public function used(){
+        $this->used = 1;
+        $query = "UPDATE tokens SET used=1 WHERE token=:token";
+        $params['token'] = $this->token;
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params);
     }
     private function set(){
         $this->token = bin2hex(openssl_random_pseudo_bytes(64));
