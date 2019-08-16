@@ -12,7 +12,7 @@ function handleError($errno, $errstr, $errfile, $errline)
             echo $errfile;
             echo $errline;
         }
-        include '../../views/errors/500.php';
+        include '../views/errors/500.php';
         die();
         break;
     
@@ -43,4 +43,11 @@ function handleError($errno, $errstr, $errfile, $errline)
 
     return true;
 }
-//set_error_handler("handleError");
+set_error_handler("handleError");
+
+function exception_handler($exception) {
+    include '../views/errors/500.php';
+    die();
+}
+
+set_exception_handler('exception_handler');

@@ -22,7 +22,7 @@
         <h1>Bok.</h1>
         <p class="lead">Registracija</p>
         <p>Za prijavu na natjecanje Znanstvenik u meni natjecatelji i mentori moraju otvoriti korisnički račun.</p>
-        <form action="/addUser" method="post">
+        <form action="/addUser" method="post" id="signup">
             <input type="hidden" name="csrftoken" value="<?php echo $formtoken; ?>">
             <div class="stepOne">
             <label for="aai">AAI@EduHR email adresa na @skole.hr domeni</label>
@@ -37,17 +37,32 @@
             </div>
             <div class="stepTwo" style="display:none;">
             <label for="email">Email adresa za kontakt</label>
-            <input type="email" name="email" id="email" class="form-control" placeholder="npr. ivana.horvat@gmail.com">
+            <input type="email" name="email" id="email" class="form-control" placeholder="npr. ivana.horvat@gmail.com" required>
             <label for="phone">Broj mobitela za kontakt</label>
-            <input type="tel" name="phone" id="phone" class="form-control" placeholder="npr. 095 1000 1234">
-            <p>Tražit ćemo potvrdu broja mobitela.</p>
-            <a class="btn btn-primary" id="aaiValidator" onclick="validatePhone()">Nastavi &rarr;</a>
+            <input type="tel" name="phone" id="phone" class="form-control" placeholder="npr. 095 1000 1234" required>
+            <div class="phoneHelp" style="display:none;">
+                <p class="lead text-danger">Pogreška</p>
+                <p>Morate unijeti valjanu email adresu i broj mobitela za nastavak.</p>
+            </div>
+            <a class="btn btn-primary" id="continuePersonal" onclick="continueToPersonal()">Nastavi &rarr;</a>
             </div>
         <div class="stepThree" style="display:none;">
-            <b>Poslali smo kod za potvrdu na <span class="telno"></span>.</b>
-            <p>Upišite ga ispod.</p>
-            <input type="text" name="phoneconfirmation" id="phoneconfirmation">
-            <a class="btn btn-primary" id="aaiValidator" onclick="checkPhone()">Nastavi &rarr;</a>
+            <label for="firstName">Ime</label>
+            <input type="text" name="firstName" id="firstName" class="form-control" placeholder="npr. Ivana" required>
+            <label for="lastName">Prezime</label>
+            <input type="text" name="lastName" id="lastName" class="form-control" placeholder="npr. Horvat" required>
+            <label for="password">Lozinka</label>
+            <input type="password" name="password" id="password" class="form-control" placeholder="Unesite sigurnu lozinku." required>
+            <label for="type">Ja sam...</label>
+            <select name="type" id="type" class="form-control" required>
+            <option value="1">Učenik/učenica</option>
+            <option value="2">Mentor(ica)</option>
+            </select>
+            <div class="dataHelp" style="display:none;">
+                <p class="lead text-danger">Pogreška</p>
+                <p>Morate unijeti valjano ime i prezime, kao i status u ustanovi.</p>
+            </div>
+            <a class="btn btn-primary" id="continueSave" onclick="continueSave()" required>Nastavi &rarr;</a>
 
         </div>
         </form>

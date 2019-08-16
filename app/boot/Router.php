@@ -6,32 +6,112 @@ $route = array_splice($route, 1);
 
 switch($route[0]){
     case '':
-
+        if(isset($_COOKIE['cmsession'])){
+            $Session = new Session($pdo);
+            $Session->token = $_COOKIE['cmsession'];
+            if(!$Session->verify()){
+                header('Location: /accounts/signin');
+                die();
+            }
+            else{
+                header('Location: /dashboard');
+                die();
+            }
+        }
+        else{
+            header('Location: /accounts/signin');
+            die();
+        }
     break;
 
+    case 'dashboard':
+        $Session = new Session($pdo);
+        $Session->token = $_COOKIE['cmsession'];
+        if(!$Session->verify()){
+                header('Location: /accounts/signin');
+                die();
+        }
+        $Application = new Application($pdo);
+        $Application->byUser($Session->user);
+
+        include '../views/dashboard.php';
+    break;
     case 'accounts':
         if($route[1] == 'new'){
             $Token = new Token($pdo,null,null,null,'addUser');
             $formtoken = $Token->get();
+           
             include '../views/signup.php';
         }
+        elseif($route[1] == 'signin'){
+            $Token = new Token($pdo,null,null,null,'addSession');
+            $formtoken = $Token->get();
+            if(isset($route[2])){
+                if($route[2] == 'error'){
+                    $msg = '<div class="alert alert-danger"><b>Pogrešan AAI@EduHR identitet ili lozinka.</b> Pokušajte ponovno ili se obratite Organizaciji natjecanja za pomoć.</div>';
+                }
+            }
+            
+            include '../views/signin.php';
+        }
+    break;
+    case 'addSession':
+        $User = new User($pdo);
+        $Token2 = new Token($pdo, $_POST['csrftoken']);
+        $Token2->load();
+        if($Token2->used){
+            throw new Exception('CSRF validation falied');
+        }
+        if($Token2->usableOn != 'addSession'){
+            throw new Exception('CSRF validation falied');
+        }
+        $Token2->used();
+        $User->aai = $_POST['aai'];
+        $User->load();
+        if($User->password == null){
+            header('Location: /accounts/signin/error');
+            die();
+        }
+        if(!(password_verify($_POST['password'], $User->password))){
+            header('Location: /accounts/signin/error');
+        }
+        $Session = new Session($pdo);
+        $Session->config = $config;
+        $Session->user = $User->id;
+        $Session->create();
+        $Session->setCookie();
+        header('Location: /dashboard');
     break;
     case 'addUser':
-
-        echo 1;
         $User = new User($pdo);
+        $Token2 = new Token($pdo, $_POST['csrftoken']);
+        $Token2->load();
+        if($Token2->used){
+            throw new Exception('CSRF validation falied');
+        }
+        if($Token2->usableOn != 'addUser'){
+            throw new Exception('CSRF validation falied');
+        }
+        $Token2->used();
+        $User->aai = $_POST['aai'];
         if(stripos($User->aai, '@skole.hr') === FALSE){
             throw new Exception('Invalid data entered');
         }
-        $User->aai = 'test@znanstvenikumeni.org';
-        $User->password = 'test';
-        $User->firstName = 'Test';
-        $User->lastName = 'User';
-        $User->metadata = '-';
-        $User->email = 'test@znanstvenikumeni.org';
-        $User->phone = '123456789';
+        $User->password = $_POST['password']; // it gets hashed in User.php and doesn't get saved in plaintext, don't worry
+        $User->firstName = $_POST['firstName'];
+        $User->lastName = $_POST['lastName'];
+        $metadata['type'] = $_POST['type'];
+        $User->metadata = json_encode($metadata);
+        $User->email = $_POST['email'];
+        $User->phone = $_POST['phone'];
         $User->newUser = 1;
         $User->save();
+        $Session = new Session($pdo);
+        $Session->config = $config;
+        $Session->user = $User->id;
+        $Session->create();
+        $Session->setCookie();
+        header('Location: /dashboard');
     break;
     
     default:
