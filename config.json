@@ -11,5 +11,6 @@
     "logoURL": "https://znanstvenikumeni.org/cdn/img/zum-logo-black.png",
     "defaultSessionValidity": 3,
     "cookiedomain": "cmzum.local",
-    "sslAvailable": false
+    "sslAvailable": false,
+    "organisationalYear": 2019
 }

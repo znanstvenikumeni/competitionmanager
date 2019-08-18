@@ -28,12 +28,15 @@ switch($route[0]){
         $Session = new Session($pdo);
         $Session->token = $_COOKIE['cmsession'];
         if(!$Session->verify()){
+                new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
                 header('Location: /accounts/signin');
                 die();
         }
         $Application = new Application($pdo);
-        $Application->byUser($Session->user);
-
+        $Applications = $Application->byUser($Session->user);
+        $User = new User($pdo);
+        $User->id = $Session->user;
+        $User->load();
         include '../views/dashboard.php';
     break;
     case 'accounts':
@@ -50,6 +53,9 @@ switch($route[0]){
                 if($route[2] == 'error'){
                     $msg = '<div class="alert alert-danger"><b>Pogrešan AAI@EduHR identitet ili lozinka.</b> Pokušajte ponovno ili se obratite Organizaciji natjecanja za pomoć.</div>';
                 }
+                if($route[2] == 'tooManyAttempts'){
+                    $msg = '<div class="alert alert-danger"><b>Sigurnosno blokiranje aktivno.</b> Vaš korisnički račun i/ili IP adresa su blokirani na pola sata zbog prevelikog broja neuspjelih prijava. Dodatni pokušaji prijava produžit će vrijeme čekanja na otključavanje korisničkog računa. Za pomoć, obratite se Organizaciji natjecanja.</div>';
+                }
             }
             
             include '../views/signin.php';
@@ -60,19 +66,23 @@ switch($route[0]){
         $Token2 = new Token($pdo, $_POST['csrftoken']);
         $Token2->load();
         if($Token2->used){
-            throw new Exception('CSRF validation falied');
+            new LogEntry($pdo, 'TokenSecurity/TokenIdempotency', 'addSession', 'failed',null, null, null);
+            throw new Exception('CSRF validation failed');
         }
         if($Token2->usableOn != 'addSession'){
-            throw new Exception('CSRF validation falied');
+            new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'addSession', 'failed',null, null, null);
+            throw new Exception('CSRF validation failed');
         }
         $Token2->used();
         $User->aai = $_POST['aai'];
         $User->load();
         if($User->password == null){
+            new LogEntry($pdo, 'AccountSecurity/LoginFail/AccountDoesntExist', 'addSession', 'failed',null, $_POST['aai'], null);
             header('Location: /accounts/signin/error');
             die();
         }
         if(!(password_verify($_POST['password'], $User->password))){
+            new LogEntry($pdo, 'AccountSecurity/LoginFail/WrongPassword', 'addSession', 'failed',null, $_POST['aai'], null);
             header('Location: /accounts/signin/error');
         }
         $Session = new Session($pdo);
@@ -87,17 +97,39 @@ switch($route[0]){
         $Token2 = new Token($pdo, $_POST['csrftoken']);
         $Token2->load();
         if($Token2->used){
-            throw new Exception('CSRF validation falied');
+            new LogEntry($pdo, 'TokenSecurity/TokenIdempotency', 'addUser', 'failed',null, null, null);
+            throw new Exception('CSRF validation failed');
         }
         if($Token2->usableOn != 'addUser'){
-            throw new Exception('CSRF validation falied');
+            new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'addSession', 'failed',null, null, null);
+            throw new Exception('CSRF validation failed');
         }
         $Token2->used();
         $User->aai = $_POST['aai'];
         if(stripos($User->aai, '@skole.hr') === FALSE){
-            throw new Exception('Invalid data entered');
+            include '../views/errors/invalidData.php';
+            //throw new Exception('Invalid data entered');
+            die();
         }
         $User->password = $_POST['password']; // it gets hashed in User.php and doesn't get saved in plaintext, don't worry
+        if(strlen($User->password) < 8){
+            include '../views/errors/invalidData.php';
+            //throw new Exception('Invalid data entered');
+            die();
+        }
+        $blacklist = file_get_contents('../passwordsBlacklist.txt');
+        $blacklist = explode("\r\n", $blacklist);
+
+        $blacklisted = false;
+        $flipped_haystack = array_flip($blacklist);
+        if ( isset($flipped_haystack[$User->password]) ){
+            $blacklisted = true;
+        } 
+        if($blacklisted){
+            include '../views/errors/invalidData.php';
+            //throw new Exception('Invalid data entered - password too common');
+            die();
+        }
         $User->firstName = $_POST['firstName'];
         $User->lastName = $_POST['lastName'];
         $metadata['type'] = $_POST['type'];

@@ -16,7 +16,47 @@ class Session{
         $this->conn = $pdo;
     }
 
+    public function checkAttempts(){
+        $query = "SELECT * FROM logs WHERE AccountSecurity/LoginFail/AccountDoesntExist AND time>:time AND ip=:ip";
+        $params['time'] = time()-60*30;
+        $params['ip'] = $_SERVER['REMOTE_ADDR'];
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params);
+        $attemptsQ1 = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $failedAttemptsByIP = count($attemptsQ1);
+        $query = "SELECT * FROM logs WHERE AccountSecurity/LoginFail/WrongPassword AND time>:time AND ip=:ip";
+        $params['time'] = time()-60*30;
+        $params['ip'] = $_SERVER['REMOTE_ADDR'];
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params);
+        $attemptsQ2 = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $failedAttemptsByIP += count($attemptsQ2);
+        $query = "SELECT * FROM logs WHERE AccountSecurity/LoginFail/WrongPassword AND time>:time AND user=:user";
+        $params2['time'] = time()-60*30;
+        $params2['user'] = $this->user;
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params2);
+        $attemptsQ3 = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $failedAttemptsByUser = count($attemptsQ3);
+        if($failedAttemptsByIP > 5 && $failedAttemptsByUser < 5){
+            return -1;
+        }
+        if($failedAttemptsByIP > 5 && $failedAttemptsByUser >= 5){
+            return -2;
+        }
+        if($failedAttemptsByIP + $failedAttemptsByUser > 5){
+            return -3;
+        }
+
+    }
+
     public function create(){
+        $allow = $this->checkAttempts();
+        if($allow < 0){
+            new LogEntry($pdo, 'AccountSecurity/LoginFail/WrongPassword', 'addSession', 'failed',null, $this->aai, null);
+            header('Location: /accounts/signin/tooManyAttempts');
+            die();
+        }
         $this->token = bin2hex(openssl_random_pseudo_bytes(64));
         $this->time = time();
         $this->validity = time()+$this->config->defaultSessionValidity*60*60;

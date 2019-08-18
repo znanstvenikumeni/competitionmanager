@@ -1,5 +1,6 @@
  CREATE TABLE users (id bigint(20) primary key auto_increment, aai varchar(256) unique, firstname varchar(256), lastname varchar(256), metadata longtext, email varchar(256), phone varchar(24), status int(10)) character set = utf8mb4, auto_increment=714482; 
  ALTER TABLE users ADD COLUMN password varchar(1024) AFTER aai;  
  create table applications ( id bigint(20) auto_increment primary key, title varchar(256), description longtext, vmssID varchar(1024), mentors longtext, teamMembers longtext, status int(5), year int(5), data longtext) charset=utf8mb4, auto_increment=91144014;
- create table sessions  (id bigint(20) primary key auto_increment,user bigint(20), token varchar(1024), time bigint(20), validity bigint(20), useragent varchar(256), ip v
+ create table sessions  (id bigint(20) primary key auto_increment,user bigint(20), token varchar(1024), time bigint(20), validity bigint(20), useragent varchar(256), ip varchar(256), data longtext) character set = utf8mb4, auto_increment=41110031;
  create table tokens ( id bigint(20) primary key auto_increment, user bigint(20), session bigint(20), token varchar(1024), used int(1), usableOn longtext, data longtext ) character set = utf8mb4, auto_increment=18832871; 
+ CREATE TABLE logs (id bigint(20) primary key auto_increment, user bigint(20), session bigint(20), component varchar(256), action varchar(256), result varchar(256), time varchar(256), ip varchar(256),  useragent varchar(256), data longtext) character set = utf8mb4, auto_increment=4555110001;
