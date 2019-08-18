@@ -17,14 +17,22 @@ class Application{
     }
 
     public function byUser($user){
-        $query = "SELECT * FROM applications WHERE teamMembers LIKE concat('%', :user, '%') ORDER BY year DESC LIMIT 1";
+        $query = "SELECT * FROM applications WHERE teamMembers LIKE concat('%', :user, '%') ORDER BY year DESC";
         $params['user'] = $user;
         $statement = $this->conn->prepare($query);
         $statement->execute($params);
-        $application = $statement->fetch(PDO::FETCH_ASSOC);
-        foreach($application as $key=>$value){
-            $this->$key = $value;
+        $application = $statement->fetchAll(PDO::FETCH_ASSOC);
+        //var_dump($application);
+        $Applications = [];
+        foreach($application as $row){
+            $App = new Application($this->conn);
+            foreach($row as $key=>$value){
+                $App->$key = $value;
+            }
+            array_push($Applications, $App);
         }
+        
+        return $Applications;
     }
     
 }

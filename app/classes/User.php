@@ -29,12 +29,22 @@ class User{
     }
 
     public function load(){
-        $query = "SELECT * FROM users WHERE aai=:aai LIMIT 1";
-        $params['aai'] = $this->aai;
+        if($this->aai){
+            $query = "SELECT * FROM users WHERE aai=:aai LIMIT 1";
+            $params['aai'] = $this->aai;
+        }
+        elseif($this->id){
+            $query = "SELECT * FROM users WHERE id=:id LIMIT 1";
+            $params['id'] = $this->id;
+        }
+        else{
+            throw new Exception('Called load() on User without setting aai or id');
+        }
         $statement = $this->conn->prepare($query);
         $statement->execute($params);
         $user = $statement->fetch(PDO::FETCH_ASSOC);
         $this->id = $user['id'];
+        $this->aai = $user['aai'];
         $this->password = $user['password'];
         $this->firstName = $user['firstname'];
         $this->lastName = $user['lastname'];

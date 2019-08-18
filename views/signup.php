@@ -51,8 +51,9 @@
             <input type="text" name="firstName" id="firstName" class="form-control" placeholder="npr. Ivana" required>
             <label for="lastName">Prezime</label>
             <input type="text" name="lastName" id="lastName" class="form-control" placeholder="npr. Horvat" required>
-            <label for="password">Lozinka</label>
-            <input type="password" name="password" id="password" class="form-control" placeholder="Unesite sigurnu lozinku." required>
+            <label for="password">Lozinka (minimalno 8 znakova)</label>
+            <input type="password" name="password" id="password" minlength="8" class="form-control" placeholder="Unesite sigurnu lozinku." required>
+            <br><small>Lozinka mora sadržavati minimalno 8 znakova, mora sadržavati barem jedan broj ili posebni znak te ne smije biti laka za pogoditi.</small><br>
             <label for="type">Ja sam...</label>
             <select name="type" id="type" class="form-control" required>
             <option value="1">Učenik/učenica</option>
