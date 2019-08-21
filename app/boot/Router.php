@@ -3,7 +3,10 @@
 $request = $_SERVER['REQUEST_URI'];
 $route = explode('/', $request);
 $route = array_splice($route, 1);
-
+if($_SERVER['REQUEST_METHOD'] == 'OPTIONS'){
+    header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
+    die();
+}
 switch($route[0]){
     case '':
         if(isset($_COOKIE['cmsession'])){
@@ -22,6 +25,29 @@ switch($route[0]){
             header('Location: /accounts/signin');
             die();
         }
+    break;
+    
+    case 'getUploadEndpoint':
+        $Session = new Session($pdo);
+        $Session->token = $_COOKIE['cmsession'];
+        if(!$Session->verify()){
+                new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+                header('Location: /accounts/signin');
+                die();
+        }
+        $Token = new Token($pdo, $route[1]);
+        $Token->load();
+        if($Token->used){
+            new LogEntry($pdo, 'TokenSecurity/TokenIdempotency', 'getUploadEndpoint', 'failed',null, null, null);
+            throw new Exception('CSRF validation failed');
+        }
+        if($Token->usableOn != 'getUploadEndpoint'){
+            new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'getUploadEndpoint', 'failed',null, null, null);
+            throw new Exception('CSRF validation failed');
+        }
+        $Token->used();
+        $EndpointURL = file_get_contents($config->vmssAuthEndpoint);
+        var_dump($config->vmssBaseURL.$EndpointURL);
     break;
 
     case 'dashboard':
@@ -101,7 +127,7 @@ switch($route[0]){
             throw new Exception('CSRF validation failed');
         }
         if($Token2->usableOn != 'addUser'){
-            new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'addSession', 'failed',null, null, null);
+            new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'addUser', 'failed',null, null, null);
             throw new Exception('CSRF validation failed');
         }
         $Token2->used();
@@ -146,6 +172,25 @@ switch($route[0]){
         header('Location: /dashboard');
     break;
     
+    case 'application':
+        if($route[1] == 'new'){
+            $Session = new Session($pdo);
+            $Session->token = $_COOKIE['cmsession'];
+            if(!$Session->verify()){
+                    new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+                    header('Location: /accounts/signin');
+                    die();
+            }
+            $User = new User($pdo);
+            $User->id = $Session->user;
+            $User->load();
+            $Token = new Token($pdo,null,$User->id,$Session->id,'addApplication');
+            $formtoken = $Token->get();
+            $EndpointURL = file_get_contents($config->vmssAuthEndpoint);
+            $EndpointURL = $config->vmssBaseURL.$EndpointURL;
+            include '../views/newApplication.php';
+        }
+    break;
     default:
         include '../views/errors/404.php';
     break;
