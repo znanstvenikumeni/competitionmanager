@@ -17,21 +17,21 @@ class Session{
     }
 
     public function checkAttempts(){
-        $query = "SELECT * FROM logs WHERE AccountSecurity/LoginFail/AccountDoesntExist AND time>:time AND ip=:ip";
+        $query = "SELECT * FROM logs WHERE component = 'AccountSecurity/LoginFail/AccountDoesntExist' AND time>:time AND ip=:ip";
         $params['time'] = time()-60*30;
         $params['ip'] = $_SERVER['REMOTE_ADDR'];
         $statement = $this->conn->prepare($query);
         $statement->execute($params);
         $attemptsQ1 = $statement->fetchAll(PDO::FETCH_ASSOC);
         $failedAttemptsByIP = count($attemptsQ1);
-        $query = "SELECT * FROM logs WHERE AccountSecurity/LoginFail/WrongPassword AND time>:time AND ip=:ip";
+        $query = "SELECT * FROM logs WHERE component = 'AccountSecurity/LoginFail/WrongPassword' AND time>:time AND ip=:ip";
         $params['time'] = time()-60*30;
         $params['ip'] = $_SERVER['REMOTE_ADDR'];
         $statement = $this->conn->prepare($query);
         $statement->execute($params);
         $attemptsQ2 = $statement->fetchAll(PDO::FETCH_ASSOC);
         $failedAttemptsByIP += count($attemptsQ2);
-        $query = "SELECT * FROM logs WHERE AccountSecurity/LoginFail/WrongPassword AND time>:time AND user=:user";
+        $query = "SELECT * FROM logs WHERE component = 'AccountSecurity/LoginFail/WrongPassword' AND time>:time AND user=:user";
         $params2['time'] = time()-60*30;
         $params2['user'] = $this->user;
         $statement = $this->conn->prepare($query);
