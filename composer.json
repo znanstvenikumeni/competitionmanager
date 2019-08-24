@@ -1,5 +1,6 @@
 {
     "require": {
-        "bugsnag/bugsnag": "^3.0"
+        "bugsnag/bugsnag": "^3.0",
+        "wildbit/postmark-php": "^2.8"
     }
 }

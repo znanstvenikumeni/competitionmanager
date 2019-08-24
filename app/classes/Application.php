@@ -35,4 +35,54 @@ class Application{
         return $Applications;
     }
     
+    private function saveAsUpdate(){
+
+    }
+
+    private function prepareData(){
+        if($this->id){
+            $params['id'] = $this->id;
+        }
+        $params['title'] = $this->title;
+        $params['description'] = $this->description;
+        $params['vmssID'] = $this->vmssID;
+        $params['mentors'] = $this->mentors;
+        $params['teamMembers'] = $this->teamMembers;
+        $params['status'] = $this->status;
+        $params['year'] = $this->year;
+        $params['data'] = $this->data;
+        return $params;
+    }
+
+    public function save(){
+        if($this->id){
+            $this->saveAsUpdate();
+        }
+        else{
+            $this->saveAsNewApplication();
+        }
+    }
+
+    private function saveAsNewApplication(){
+        $params = $this->prepareData();
+        $sqlQuery = "INSERT INTO applications VALUES (null, :title, :description, :vmssID, :mentors, :teamMembers, :status, :year, :data)";
+        $statement = $this->conn->prepare($sqlQuery);
+        $statement->execute($params);
+        $this->id = $this->conn->lastInsertId();
+    }
+
+    public function load(){
+        $sqlQuery = "SELECT * FROM applications WHERE id=:id";
+        $params['id'] = $this->id;
+        $statement = $this->conn->prepare($sqlQuery);
+        $statement->execute($params);
+        $Application = $statement->fetch(PDO::FETCH_ASSOC);
+        $this->loadFromAssoc($Application);
+    }
+
+    private function loadFromAssoc($assoc){
+        foreach($assoc as $key=>$value){
+            $this->$key = $value;
+        }
+    }
 }

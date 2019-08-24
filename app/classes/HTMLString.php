@@ -8,6 +8,7 @@ class HTMLString{
         if($echo){
             echo $this->string;
         }
+
     }
     
     public function echo(){

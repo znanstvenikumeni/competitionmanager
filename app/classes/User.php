@@ -89,5 +89,10 @@ class User{
         $this->id = $this->conn->lastInsertId();
     }
 
+    public function isMentor(){
+        $Metadata = json_decode($this->metadata);
+        if($Metadata->type == 2) return true;
+        return false;
+    }
 
 }
