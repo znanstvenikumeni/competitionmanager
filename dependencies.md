@@ -4,6 +4,10 @@ Anyway, here's a list of our dependencies and the code we've used.
 
 Frontend:
 * better-status-pages (a customized version)
+* Uppy
+* VMSS
 
 Backend:
 * PHP, MySQL
+* Bugsnag
+* VMSS
