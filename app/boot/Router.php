@@ -230,12 +230,187 @@ switch($route[0]){
             $Application = new Application($pdo);
             $Application->id = $route[1];
             $Application->load();
-            var_dump($Application);
+            if($Application->status != 1){
+                new LogEntry($pdo, 'ApplicationIntegrity/ApplicationStatusHigherThan1TryingToBeEdited', 'application/id', 'failed',$_POST, $Session->user, $_COOKIE['cmsession']);
+                die();
+            }
             $Token = new Token($pdo,null,$User->id,$Session->id,'editApplication');
             $formtoken = $Token->get();
             $EndpointURL = file_get_contents($config->vmssAuthEndpoint);
             $EndpointURL = $config->vmssBaseURL.$EndpointURL;
             include '../views/editApplication.php';
+        }
+    break;
+    case 'editApplication':
+        $Session = new Session($pdo);
+        $Session->token = $_COOKIE['cmsession'];
+        if(!$Session->verify()){
+            new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+            header('Location: /accounts/signin');
+            die();
+        }
+        $User = new User($pdo);
+        $User->id = $Session->user;
+        $User->load();
+
+        $Token = new Token($pdo, $_POST['csrftoken']);
+        $Token->load();
+        if($Token->used){
+            new LogEntry($pdo, 'TokenSecurity/TokenIdempotency', 'editApplication', 'failed',null, $Session->id, $User->id);
+            throw new Exception('CSRF validation failed');
+        }
+        if($Token->usableOn != 'editApplication'){
+            new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'editApplication', 'failed',null, $Session->id, $User->id);
+            throw new Exception('CSRF validation failed');
+        }
+        $Token->used();
+        $ApplicationFactory = new Application($pdo);
+        $Applications = $ApplicationFactory->byUser($User->id);
+        $valid = false;
+        foreach ($Applications as $App){
+            if($App->id == $_POST['applicationID']) $valid = true;
+        }
+        $Applications = $ApplicationFactory->byUser($User->aai);
+        foreach ($Applications as $App){
+            if($App->id == $_POST['applicationID']) $valid = true;
+        }
+        if(!$valid){
+            new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+            header('Location: /accounts/signin');
+            die();
+        }
+        $Application = new Application($pdo);
+        $Application->id = $_POST['applicationID'];
+        $Application->load();
+        if($Application->status != 1){
+            new LogEntry($pdo, 'ApplicationIntegrity/ApplicationStatusHigherThan1TryingToBeEdited', 'editApplication', 'failed',$_POST, $Session->user, $_COOKIE['cmsession']);
+            die();
+        }
+        $Application->title = $_POST['title'];
+        $Application->description = $_POST['description'];
+        $Application->vmssID = $_POST['vmssid'];
+        
+        $TeamMembers['carrier']['aai'] = $_POST['aai1'];
+        $TeamMembers['carrier']['school'] = $_POST['school1'];
+        $TeamMembers['carrier']['age'] = $_POST['age1'];
+        $TeamMembers['carrier']['zsem'] = $_POST['zsem1'];
+        if(!($_POST['aai1'] && $_POST['school1'] && $_POST['age1'])){
+            $TeamMembersMissingData = true;
+        }
+        
+        $Competitor = new User($pdo);
+        $Competitor->aai = $_POST['aai1'];
+        $Competitor->load();
+        $TeamMembers['carrier']['id'] = $Competitor->id;
+        if($_POST['aai2']){
+            $Competitor = new User($pdo);
+            $Competitor->aai = $_POST['aai2'];
+            $Competitor->load();
+            $TeamMembers['secondary']['aai'] = $_POST['aai2'];
+            $TeamMembers['secondary']['id'] = $Competitor->id;
+            $TeamMembers['secondary']['school'] = $_POST['school2'];
+            $TeamMembers['secondary']['age'] = $_POST['age2'];
+            $TeamMembers['secondary']['zsem'] = $_POST['zsem2'];
+            if($Competitor->id) $TeamMembersValid = true;
+            else $TeamMembersValid = false;
+            if(!($_POST['aai2'] && $_POST['school2'] && $_POST['age2'])){
+                $TeamMembersMissingData = true;
+            }
+        }
+        else{
+            $TeamMembersValid = true;
+        }
+
+        $Mentor = new User($pdo);
+        $Mentor->aai = $_POST['aaiMentor1'];
+        $Mentors['first']['aai'] = $Mentor->aai;
+        $Mentor->load();
+        $Mentors['first']['name'] = $Mentor->firstName.' '.$Mentor->lastName;
+        if($Mentor->id) $MentorsValid = true;
+        else $MentorsValid = false;
+        if($_POST['aaiMentor2']){
+            $Mentor = new User($pdo);
+            $Mentor->aai = $_POST['aaiMentor1'];
+            $Mentors['first']['aai'] = $Mentor->aai;
+            $Mentor->load();
+            $Mentors['first']['name'] = $Mentor->firstName.' '.$Mentor->lastName;
+            if($Mentor->id) $MentorsValid = true;
+            else $MentorsValid = false;
+        }
+        
+        $TeamMembers = json_encode($TeamMembers);
+        $Mentors = json_encode($Mentors);
+        $Year = $config->organisationalYear;
+        $Data['category'] = $_POST['category'];
+        $CategoryValid = (bool)$_POST['category'];
+        $Data = json_encode($Data);
+        $Application->mentors = $Mentors;
+        $Application->teamMembers = $TeamMembers;
+        $Application->year = $Year;
+        $Application->data = $Data;
+        if($_POST['draft']){
+            $status = 1;
+        }
+        else{
+            $status = 2;
+        }
+        if($status == 2){
+            $errors = [];
+            if(!$Application->title){
+                $errors[] = 'Niste unijeli Naslov rada, što je obavezno polje.';
+            }
+            if(!$Application->description){
+                $errors[] = 'Niste unijeli Opis rada, što je obavezno polje.';
+            }
+            if(!$Application->vmssID){
+                $errors[] = 'Niste prenijeli videozapis rada, što je obavezno.';
+            }
+            if(!$CategoryValid){
+                $errors[] = 'Niste unijeli Kategoriju rada, što je obavezno polje.';
+            }
+            if(!$TeamMembersValid){
+                $errors[] = 'Netko od natjecatelja koji su članovi rada nema otvoren korisnički račun, što je obavezno.';
+            }
+            if($TeamMembersMissingData){
+                $errors[] = 'Neki podaci o natjecateljima nedostaju.';
+            }
+            if(!$MentorsValid){
+                $errors[] = 'Netko od mentora rada nema otvoren korisnički račun, što je obavezno';
+            }
+            if(count($errors)){
+                $status = 1;
+            }
+        }
+        $Application->status = $status;
+        $Application->save();
+        if(count($errors)){
+            include '../views/applicationSubmissionError.php';
+        }
+        elseif($status==2){
+            $EmailData['date'] = date('j. n. Y.');
+            $i=0;
+            $AppDetails[$i]['field'] = 'Naslov rada';
+            $AppDetails[$i]['content'] = $Application->title;
+            $i++;
+            $AppDetails[$i]['field'] = 'Opis rada';
+            $AppDetails[$i]['content'] = $Application->description;
+            $i++;
+            $AppDetails[$i]['field'] = 'Oznaka kategorije';
+            $AppDetails[$i]['content'] = $_POST['category'];
+            $i++;
+            $AppDetails[$i]['field'] = 'ID videozapisa';
+            $AppDetails[$i]['content'] = $Application->vmssID;
+            $i++;
+            $EmailData['app_details'] = $AppDetails;
+            $sendResult = $Postmark->sendEmailWithTemplate(
+            $config->defaultEmail,
+            $User->email,
+            $config->postmarkApplicationSubmissionTemplate,
+            $EmailData);
+            header('Location: /dashboard');
+        }
+        else{
+            header('Location: /dashboard');
         }
     break;
     case 'addApplication':
@@ -260,7 +435,7 @@ switch($route[0]){
             new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'addApplication', 'failed',null, $Session->id, $User->id);
             throw new Exception('CSRF validation failed');
         }
-        //$Token->used();
+        $Token->used();
         if($_POST['status'] != "1"){
             new LogEntry($pdo, 'ApplicationIntegrity/ApplicationStatusHigherThan1OnNewApplication', 'addApplication', 'success', json_encode([$_POST['title'], $_POST['vmssid']]));
         }

@@ -22,7 +22,6 @@ class Application{
         $statement = $this->conn->prepare($query);
         $statement->execute($params);
         $application = $statement->fetchAll(PDO::FETCH_ASSOC);
-        //var_dump($application);
         $Applications = [];
         foreach($application as $row){
             $App = new Application($this->conn);
@@ -35,9 +34,7 @@ class Application{
         return $Applications;
     }
     
-    private function saveAsUpdate(){
 
-    }
 
     private function prepareData(){
         if($this->id){
@@ -51,6 +48,7 @@ class Application{
         $params['status'] = $this->status;
         $params['year'] = $this->year;
         $params['data'] = $this->data;
+        var_dump($params);
         return $params;
     }
 
@@ -63,6 +61,13 @@ class Application{
         }
     }
 
+    private function saveAsUpdate(){
+        $params = $this->prepareData();
+        $sqlQuery = "UPDATE applications SET title=:title, description=:description, vmssID=:vmssID, mentors=:mentors, teamMembers=:teamMembers, status=:status, year=:year, data=:data WHERE id=:id";
+        $statement = $this->conn->prepare($sqlQuery);
+        $statement->execute($params);
+        return $this->id;
+    }
     private function saveAsNewApplication(){
         $params = $this->prepareData();
         $sqlQuery = "INSERT INTO applications VALUES (null, :title, :description, :vmssID, :mentors, :teamMembers, :status, :year, :data)";

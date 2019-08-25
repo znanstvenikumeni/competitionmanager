@@ -53,7 +53,19 @@
             <div class="card-body">
               <h5 class="card-title"><?php new HTMLString($Application->title, true); ?></h5>
               <p class="card-text"><?php new HTMLString($Application->description, true); ?></p>
-              <a href="/application/<?php new HTMLString($Application->id, true); ?>" class="btn btn-primary">Otvori prijavu</a>
+              <?php if($Application->status == 1){
+              ?>
+              <a href="/application/<?php new HTMLString($Application->id, true); ?>" class="btn btn-primary">Uredi ili predaj prijavu</a>
+              <br>Ova prijava <b>nije predana</b>.
+              <?php
+              }
+              else{
+                ?>
+                <br>Ova prijava <b>je predana</b> i više se ne može uređivati.
+                <?php
+
+              }
+              ?>
             </div>
           </div>
         <?php

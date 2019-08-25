@@ -45,12 +45,12 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             <?php
                 $Data = json_decode($Application->data);
             ?>
-            <option disabled <?php if(!$Data->category){ echo 'selected'; } ?>">Odaberite...</option>
-            <option value="humanisticke" <?php if($Data->category == 'humanisticke'){ echo 'selected'; } ?>">Humanističke znanosti</option>
-            <option value="kemija" <?php if($Data->category == 'kemija'){ echo 'selected'; } ?>">Kemija i srodne znanosti</option>
-            <option value="biomed" <?php if($Data->category == 'biomed'){ echo 'selected'; } ?>">Biologija, medicina i srodne znanosti</option>
-            <option value="mathcs" <?php if($Data->category == 'mathcs'){ echo 'selected'; } ?>">Matematika, informatika, elektrotehnika i srodne znanosti</option>
-            <option value="ostale" <?php if($Data->category == 'ostale'){ echo 'selected'; } ?>">Ostale znanosti / Interdisciplinaran rad</option>
+            <option disabled <?php if(!$Data->category){ echo 'selected'; } ?>>Odaberite...</option>
+            <option value="humanisticke" <?php if($Data->category == 'humanisticke'){ echo 'selected'; } ?>>Humanističke znanosti</option>
+            <option value="kemija" <?php if($Data->category == 'kemija'){ echo 'selected'; } ?>>Kemija i srodne znanosti</option>
+            <option value="biomed" <?php if($Data->category == 'biomed'){ echo 'selected'; } ?>>Biologija, medicina i srodne znanosti</option>
+            <option value="mathcs" <?php if($Data->category == 'mathcs'){ echo 'selected'; } ?>>Matematika, informatika, elektrotehnika i srodne znanosti</option>
+            <option value="ostale" <?php if($Data->category == 'ostale'){ echo 'selected'; } ?>>Ostale znanosti / Interdisciplinaran rad</option>
         </select>
         
         <label for="drag-drop-area">Video zapis rada</label>
@@ -65,7 +65,6 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         else echo '<div id="drag-drop-area"></div>';
         ?>
         <a class="btn btn-primary" role="button" onclick="continueToContestantDataInNewApplication()">Nastavi na natjecatelje &rarr;</a>
-        <button class="btn btn-secondary">Spremi kao skicu</button>
     </div>
     <div class="contestantData" style="display:none;">
         <h1>Podaci o natjecateljima</h1>
@@ -75,7 +74,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             $Competitor = $User;
         }
         else{
-            $disabled = 'disabled';
+            $disabled = 'readonly';
             $Competitor = new User($pdo);
             $Competitor->aai = json_decode($Application->teamMembers)->carrier->aai;
             $Competitor->load();
@@ -83,16 +82,18 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         ?>
         <label for="name1">Ime i prezime</label>
         <input type="text" id="name1" class="form-control" disabled value="<?php new HTMLString($Competitor->firstName.' '.$Competitor->lastName, true); ?>">
+        <input type="hidden" name="aai1" value="<?php new HTMLString($Competitor->aai, true); ?>">
+
         <label for="age1">Dob prvog natjecatelja</label>
-        <input type="number" id="age1" class="form-control" name="age1" onkeypress="age('1')" onkeyup="age('1')" value="<?php new HTMLString(json_decode($Application->teamMembers)->carrier->age, true); ?>" <?php echo $disabled; ?>">
+        <input type="number" id="age1" class="form-control" name="age1" onkeypress="age('1')" onkeyup="age('1')" value="<?php new HTMLString(json_decode($Application->teamMembers)->carrier->age, true); ?>" <?php echo $disabled; ?>>
         <div id="agehelp1" style="display:none;">Budući da imaš manje od 16 godina, tvoji roditelji/skrbnici će morati potpisati <a href="/suglasnost">suglasnost</a> da sudjeluješ na natjecanju i poslati je na mbm@educateam.hr.</div>
         <br>
        
         <label for="school1">Škola prvog natjecatelja</label>
-        <input type="text" id="school1" name="school1" class="form-control" value="<?php new HTMLString(json_decode($Application->teamMembers)->carrier->school, true); ?>" <?php echo $disabled; ?>">
+        <input type="text" id="school1" name="school1" class="form-control" value="<?php new HTMLString(json_decode($Application->teamMembers)->carrier->school, true); ?>" <?php echo $disabled; ?>>
         <br>
          <div class="form-check">
-            <input type="checkbox" name="zsem1" id="zsem1"  value="Y" <?php if(json_decode($Application->teamMembers)->carrier->zsem) echo 'selected'; ?> <?php echo $disabled; ?> class="form-check-input"><label for="zsem1" class="form-check-label">Suglasan/a sam
+            <input type="checkbox" name="zsem1" id="zsem1"  value="Y" <?php if(json_decode($Application->teamMembers)->carrier->zsem != null) echo 'checked'; ?> <?php echo $disabled; ?> class="form-check-input"><label for="zsem1" class="form-check-label">Suglasan/a sam
     da se moja e-mail adresa podijeli sa Zagrebačkom školom ekonomije i managementa
     u svrhe ostvarenja nagrade budem li nagrađen/a na natjecanju.</label>
         </div>
@@ -104,7 +105,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             $Competitor = $User;
         }
         else{
-            $disabled = 'disabled';
+            $disabled = 'readonly';
             $Competitor = new User($pdo);
             $Competitor->aai = json_decode($Application->teamMembers)->secondary->aai;
             $Competitor->load();
@@ -118,7 +119,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             <div class="alert alert-warning"><b>Poslat ćemo email na <span id="aaiData2"></span></b> i pozvati tvog sunatjecatelja da se pridruži ovoj prijavi.</div>  
         </div>
         <label for="age2">Dob drugog natjecatelja</label>
-        <input type="number" id="age2" class="form-control" name="age1" onkeypress="age('2')" value="<?php new HTMLString(json_decode($Application->teamMembers)->secondary->age, true); ?>" <?php echo $disabled; ?>>
+        <input type="number" id="age2" class="form-control" name="age2" onkeypress="age('2')" onkeyup="age('2')" value="<?php new HTMLString(json_decode($Application->teamMembers)->secondary->age, true); ?>" <?php echo $disabled; ?>>
         <div id="agehelp2" style="display:none;">Budući da imaš manje od 16 godina, tvoji roditelji/skrbnici će morati potpisati <a href="/suglasnost">suglasnost</a> da sudjeluješ na natjecanju i poslati je na mbm@educateam.hr.</div>
         <br>
         
@@ -126,7 +127,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         <input type="text" id="school2" name="school2" class="form-control" value="<?php new HTMLString(json_decode($Application->teamMembers)->secondary->school, true); ?>" <?php echo $disabled; ?>>
         <br>
         <div class="form-check">
-            <input type="checkbox" name="zsem2" id="zsem2" value="Y" class="form-check-input"  <?php if(json_decode($Application->teamMembers)->secondary->zsem) echo 'selected'; ?> <?php echo $disabled; ?> ><label for="zsem2" class="form-check-label">Suglasan/a sam
+            <input type="checkbox" name="zsem2" id="zsem2" value="Y" class="form-check-input"  <?php if(json_decode($Application->teamMembers)->secondary->zsem) echo 'checked'; ?> <?php echo $disabled; ?> ><label for="zsem2" class="form-check-label">Suglasan/a sam
     da se moja e-mail adresa podijeli sa Zagrebačkom školom ekonomije i managementa
     u svrhe ostvarenja nagrade budem li nagrađen/a na natjecanju.</label>
         </div>
@@ -171,7 +172,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             <input type="checkbox" name="draft" id="draft" value="Y" class="form-check-input"><label for="draft" class="form-check-label">Spremi moju prijavu kao skicu i nemoj je još pokušati predati.</label>
         </div>
         <button class="btn btn-primary">Spremi promjene</button>
-
+        <p><b>Ako odaberete da ne želite spremati skicu, ova prijava će se predati bude li to moguće.</b></p>
     </div>
 </div>
     <script src="https://transloadit.edgly.net/releases/uppy/v1.3.0/uppy.min.js"></script>
