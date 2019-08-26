@@ -18,5 +18,6 @@
     "defaultEmail": "obavijesti@znanstvenikumeni.org",
     "postmarkInviteTemplate": 13251986,
     "postmarkApplicationSubmissionTemplate": 13312528,
-    "signupURL": "https://prijave.znanstvenikumeni.org/accounts/new"
+    "signupURL": "https://prijave.znanstvenikumeni.org/accounts/new",
+    "adminDomain": "znanstvenikumeni.org"
 }

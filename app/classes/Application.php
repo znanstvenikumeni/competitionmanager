@@ -34,6 +34,23 @@ class Application{
         return $Applications;
     }
     
+    public function byMentor($mentor){
+        $query = "SELECT * FROM applications WHERE mentors LIKE concat('%', :mentor, '%') ORDER BY year DESC";
+        $params['mentor'] = $mentor;
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params);
+        $application = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $Applications = [];
+        foreach($application as $row){
+            $App = new Application($this->conn);
+            foreach($row as $key=>$value){
+                $App->$key = $value;
+            }
+            array_push($Applications, $App);
+        }
+        
+        return $Applications;
+    }
 
 
     private function prepareData(){
@@ -48,7 +65,6 @@ class Application{
         $params['status'] = $this->status;
         $params['year'] = $this->year;
         $params['data'] = $this->data;
-        var_dump($params);
         return $params;
     }
 

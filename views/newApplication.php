@@ -6,29 +6,62 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+<script src="https://use.fontawesome.com/f689d206fb.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://transloadit.edgly.net/releases/uppy/v1.3.0/uppy.min.css" rel="stylesheet">
+
     <?php 
         echo '<style>';
+        include 'css/sb-admin-2.min.css';
         include 'css/shared.css'; 
         include 'css/app.css'; 
         echo '</style>'; 
     ?>
     
-    <title>Nova prijava &middot; Znanstvenik u meni!</title>
-    <link href="https://transloadit.edgly.net/releases/uppy/v1.3.0/uppy.min.css" rel="stylesheet">
-
+    <title>Tvoje prijave &middot; Znanstvenik u meni!</title>
   </head>
-  <body>
-<nav class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow">
+  <body id="page-top">
+    <div id="wrapper">
+
+
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <li class="nav-item active">
+        <a class="nav-link" href="/">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Prijave za natjecatelje</span></a>
+      </li>
+      <hr class="sidebar-divider">
+        <li class="nav-item">
+        <a class="nav-link" href="/preferences">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Postavke</span></a>
+      </li>
+
+        </ul>
+   <div id="content-wrapper" class="d-flex flex-column">
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"">
+<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+
+
   <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Znanstvenik u meni!</a>
-  <ul class="navbar-nav px-3">
-    <li class="nav-item text-nowrap">
-      <a class="nav-link" href="/accounts/signout">Odjava (<?php new HTMLString($User->firstName.' '.$User->lastName, true); ?>)</a>
+  <ul class="navbar-nav ml-auto">
+   <div class="topbar-divider d-none d-sm-block"></div>
+
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="/accounts/signout" id="userDropdown" role="button">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Odjava (<?php new HTMLString($User->firstName.' '.$User->lastName, true); ?>)</span>
+              </a>
+
     </li>
   </ul>
 </nav>
-<div class="container-fluid">
+      <div id="content">
+       <div class="container-fluid">
+
     <form action="/addApplication" method="post">
     <input type="hidden" name="csrftoken" value="<?php echo $formtoken; ?>">
     <input type="hidden" id="vmssid" name="vmssid">
@@ -50,7 +83,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         </select>
         <label for="drag-drop-area">Video zapis rada</label>
         <div id="drag-drop-area"></div>
-        <a class="btn btn-primary" role="button" onclick="continueToContestantDataInNewApplication()">Nastavi na natjecatelje &rarr;</a>
+        <a class="btn btn-light" role="button" onclick="continueToContestantDataInNewApplication()"><span class="text">Nastavi na natjecatelje &rarr;</span></a>
         <button class="btn btn-secondary">Spremi kao skicu</button>
     </div>
     <div class="contestantData" style="display:none;">
@@ -97,7 +130,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         <div class="multiCompetitorHelp" style="display:none;">
             <div class="alert alert-warning">Budući da radiš u paru, tvoj sunatjecatelj će se morati pridružiti ovoj prijavi i popuniti podatke o sebi.</div>
         </div>
-        <a class="btn btn-primary" role="button" onclick="continueToMentorDataInNewApplication()">Nastavi na mentore &rarr;</a>
+        <a class="btn btn-light" role="button" onclick="continueToMentorDataInNewApplication()"><span class="text">Nastavi na mentore &rarr;</span></a>
         <button class="btn btn-secondary">Spremi kao skicu</button>
     </div>
     <div class="mentorData" style="display:none;">
@@ -119,7 +152,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         <div id="aaiHelpMentor2" style="display:none;">
             <div class="alert alert-warning"><b>Poslat ćemo email na <span id="aaiDataMentor2"></span></b> i pozvati tvog mentora da se pridruži ovoj prijavi.</div>  
         </div>
-        <button class="btn btn-secondary">Spremi kao skicu</button>
+        <button class="btn btn-primary">Spremi kao skicu</button>
         <p>Prijavu ćeš moći predati tek nakon spremanja kao skice i kada sva polja budu popunjena.</p>
     </div>
 </div>
@@ -150,9 +183,11 @@ uppy.on('complete', (result) => {
    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
     <script>
-   
         <?php
+            include 'vendor/jquery-easing/jquery.easing.min.js';
+            include 'js/sb-admin-2.min.js';
             include 'js/shared.js'; 
         ?>
     </script>

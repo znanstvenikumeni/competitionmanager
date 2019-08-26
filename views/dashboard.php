@@ -3,10 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+<script src="https://use.fontawesome.com/f689d206fb.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <?php 
         echo '<style>';
+        include 'css/sb-admin-2.min.css';
         include 'css/shared.css'; 
         include 'css/app.css'; 
         echo '</style>'; 
@@ -14,34 +18,67 @@
     
     <title>Tvoje prijave &middot; Znanstvenik u meni!</title>
   </head>
-  <body>
-<nav class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow">
+  <body id="page-top">
+    <div id="wrapper">
+
+
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <li class="nav-item active">
+        <a class="nav-link" href="/">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Prijave za natjecatelje</span></a>
+      </li>
+      <hr class="sidebar-divider">
+        <li class="nav-item">
+        <a class="nav-link" href="/preferences">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Postavke</span></a>
+      </li>
+
+        </ul>
+   <div id="content-wrapper" class="d-flex flex-column">
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"">
+<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+
+
   <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Znanstvenik u meni!</a>
-  <ul class="navbar-nav px-3">
-    <li class="nav-item text-nowrap">
-      <a class="nav-link" href="/accounts/signout">Odjava (<?php new HTMLString($User->firstName.' '.$User->lastName, true); ?>)</a>
+  <ul class="navbar-nav ml-auto">
+   <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="/accounts/signout" id="userDropdown" role="button">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Odjava (<?php new HTMLString($User->firstName.' '.$User->lastName, true); ?>)</span>
+              </a>
+
     </li>
   </ul>
 </nav>
-
-<div class="container-fluid">
-
-  <div class="row">
-    <div class="col-2 sidebar">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link" href="/dashboard">Prijave za natjecatelje</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/preferences">Postavke</a>
-          </li>
-        </ul>
-      </div>
-      <div class="col-10 main">
-        <p class="lead">Tvoje prijave</p>
-
+      <div id="content">
+       <div class="container-fluid">
         <?php
         $canApply = true;
+        if(!empty($Applications)){
+          foreach($Applications as $Application){
+            if($Application->year == $config->organisationalYear) $canApply = false;
+          }
+        }
+        ?>
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Tvoje prijave</h1>
+            <?php
+              if($canApply){
+                echo '<a href="/application/new" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"> Prijavi se</a>';
+              }
+            ?>
+
+          </div>
+
+
+        <?php
         if(!empty($Applications)){
           foreach($Applications as $Application){
             if($Application->year == $config->organisationalYear) $canApply = false;
@@ -75,22 +112,24 @@
           echo 'Još nemaš prijava na natjecanje Znanstvenik u meni!';
         }
         ?>
-        <?php
-        if($canApply){
-          echo '<hr><a href="/application/new" class="btn btn-primary btn-lg" role="button">Prijavi se</a>';
-        }
-        ?>
+        
       </div>
     </div>
-    
+    </div>
 </div>
 
+</div>
+
+
+  
 
    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
         <?php
+            include 'vendor/jquery-easing/jquery.easing.min.js';
+            include 'js/sb-admin-2.min.js';
             include 'js/shared.js'; 
         ?>
     </script>

@@ -28,6 +28,13 @@ class User{
         }
     }
 
+    private function updateUser(){
+        $params = $this->prepareData();
+        $query = "UPDATE users SET aai=:aai, password=:password, firstName=:firstName, lastName=:lastName, metadata=:metadata, email=:email, phone=:phone, status=:status WHERE id=:id";
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params);
+    }
+
     public function load(){
         if($this->aai){
             $query = "SELECT * FROM users WHERE aai=:aai LIMIT 1";
@@ -38,7 +45,8 @@ class User{
             $params['id'] = $this->id;
         }
         else{
-            throw new Exception('Called load() on User without setting aai or id');
+            //throw new Exception('Called load() on User without setting aai or id');
+            return null;
         }
         $statement = $this->conn->prepare($query);
         $statement->execute($params);

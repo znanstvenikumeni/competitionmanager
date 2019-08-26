@@ -76,6 +76,45 @@ switch($route[0]){
         
         include '../views/dashboard.php';
     break;
+    case 'mentorpanel':
+        $Session = new Session($pdo);
+        $Session->token = $_COOKIE['cmsession'];
+        if(!$Session->verify()){
+                new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+                header('Location: /accounts/signin');
+                die();
+        }
+        $User = new User($pdo);
+        $User->id = $Session->user;
+        $User->load();
+        $Application = new Application($pdo);
+        $Applications = $Application->byMentor($Session->user);
+        $Applications2 = $Application->byMentor($Session->aai);
+        array_merge($Applications, $Applications2);
+        unset($Applications2);
+        include '../views/mentorpanel.php';
+    break;
+    case 'organiserpanel':
+        $Session = new Session($pdo);
+        $Session->token = $_COOKIE['cmsession'];
+        if(!$Session->verify()){
+                new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+                header('Location: /accounts/signin');
+                die();
+        }
+        $User = new User($pdo);
+        $User->id = $Session->user;
+        $User->load();
+        if(stripos($User->email,"@".$config->adminDomain) == FALSE){
+            header('Location: /dashboard'); die();
+        }
+        $Application = new Application($pdo);
+        $Applications = $Application->byMentor('');
+        $Applications2 = $Application->byMentor($Session->aai);
+        array_merge($Applications, $Applications2);
+        unset($Applications2);
+        include '../views/organiserpanel.php';
+    break;
     case 'accounts':
         if($route[1] == 'new'){
             $Token = new Token($pdo,null,null,null,'addUser');
@@ -96,6 +135,14 @@ switch($route[0]){
             }
             
             include '../views/signin.php';
+        }
+        elseif($route[1] == 'signout'){
+            $Session = new Session($pdo);
+            $Session->token = '-1';
+            $Session->validity = 1;
+            $Session->config = $config;
+            $Session->setCookie();
+            header('Location: /');
         }
     break;
     case 'addSession':
@@ -129,6 +176,52 @@ switch($route[0]){
         $Session->setCookie();
         header('Location: /dashboard');
     break;
+    case 'preferences':
+        $Session = new Session($pdo);
+        $Session->token = $_COOKIE['cmsession'];
+        if(!$Session->verify()){
+                new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+                header('Location: /accounts/signin');
+                die();
+        }
+        $User = new User($pdo);
+        $User->id = $Session->user;
+        $User->load();
+        $Token = new Token($pdo,null,$User->id,$Session->id,'editPreferences');
+        $formtoken = $Token->get();
+        include '../views/preferences.php';
+    break;
+    case 'editPreferences':
+        $Session = new Session($pdo);
+        $Session->token = $_COOKIE['cmsession'];
+        if(!$Session->verify()){
+            new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+            header('Location: /accounts/signin');
+            die();
+        }
+        $User = new User($pdo);
+        $User->id = $Session->user;
+        $User->load();
+
+        $Token = new Token($pdo, $_POST['csrftoken']);
+        $Token->load();
+        if($Token->used){
+            new LogEntry($pdo, 'TokenSecurity/TokenIdempotency', 'editPreferences', 'failed',null, $Session->id, $User->id);
+            throw new Exception('CSRF validation failed');
+        }
+        if($Token->usableOn != 'editPreferences'){
+            new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'editPreferences', 'failed',null, $Session->id, $User->id);
+            throw new Exception('CSRF validation failed');
+        }
+        $Token->used();
+        $User->newUser = 0;
+        $User->firstName = $_POST['firstName'];
+        $User->lastName = $_POST['lastName'];
+        $User->email = $_POST['email'];
+        $User->phone = $_POST['phone'];
+        $User->save();
+        header('Location: /');
+    break;
     case 'addUser':
         $User = new User($pdo);
         $Token2 = new Token($pdo, $_POST['csrftoken']);
@@ -145,13 +238,18 @@ switch($route[0]){
         $User->aai = $_POST['aai'];
         if(stripos($User->aai, '@skole.hr') === FALSE){
             include '../views/errors/invalidData.php';
-            //throw new Exception('Invalid data entered');
+            throw new Exception('Invalid data entered');
             die();
         }
         $User->password = $_POST['password']; // it gets hashed in User.php and doesn't get saved in plaintext, don't worry
         if(strlen($User->password) < 8){
             include '../views/errors/invalidData.php';
-            //throw new Exception('Invalid data entered');
+            throw new Exception('Invalid data entered');
+            die();
+        }
+        if(!preg_match("/[^a-zA-Z]{1,}/", $User->password)){
+            include '../views/errors/invalidData.php';
+            throw new Exception('Invalid data entered');
             die();
         }
         $blacklist = file_get_contents('../passwordsBlacklist.txt');
@@ -164,7 +262,7 @@ switch($route[0]){
         } 
         if($blacklisted){
             include '../views/errors/invalidData.php';
-            //throw new Exception('Invalid data entered - password too common');
+            throw new Exception('Invalid data entered - password too common');
             die();
         }
         $User->firstName = $_POST['firstName'];
@@ -444,34 +542,41 @@ switch($route[0]){
         $TeamMembers['carrier']['school'] = $_POST['school1'];
         $TeamMembers['carrier']['age'] = $_POST['age1'];
         $TeamMembers['carrier']['zsem'] = $_POST['zsem1'];
-        $Competitor2 = new User($pdo);
-        $Competitor2->aai = $_POST['aai2'];
-        $TeamMembers['secondary']['aai'] = $Competitor2->aai;
-        $Competitor2->load();
-        $TeamMembers['secondary']['id'] = $Competitor2->id;
-        if(!$Competitor2->firstName){
-            $sendResult = $Postmark->sendEmailWithTemplate(
-            $config->defaultEmail,
-            $_POST['aai2'],
-            $config->postmarkInviteTemplate,
-            [
-            "name1" => $User->firstName.' '.$User->lastName,
-            "action_url" => $config->signupURL
-            ]);
+        if($_POST['aai2']){
+            $Competitor2 = new User($pdo);
+            $Competitor2->aai = $_POST['aai2'];
+            $TeamMembers['secondary']['aai'] = $Competitor2->aai;
+            $Competitor2->load();
+        
+       
+            $TeamMembers['secondary']['id'] = $Competitor2->id;
+            if(!$Competitor2->firstName){
+                $sendResult = $Postmark->sendEmailWithTemplate(
+                $config->defaultEmail,
+                $_POST['aai2'],
+                $config->postmarkInviteTemplate,
+                [
+                "name1" => $User->firstName.' '.$User->lastName,
+                "action_url" => $config->signupURL
+                ]);
+            }
         }
         $Mentor1 = new User($pdo);
         $Mentor1->aai = $_POST['aaiMentor1'];
-        $Mentor1->load();
-        if(!$Mentor1->firstName){
-            $sendResult = $Postmark->sendEmailWithTemplate(
-            $config->defaultEmail,
-            $_POST['aaiMentor1'],
-            $config->postmarkInviteTemplate,
-            [
-            "name1" => $User->firstName.' '.$User->lastName,
-            "action_url" => $config->signupURL
-            ]);
+        if($Mentor1->aai){
+            $Mentor1->load();
+            if(!$Mentor1->firstName){
+                $sendResult = $Postmark->sendEmailWithTemplate(
+                $config->defaultEmail,
+                $_POST['aaiMentor1'],
+                $config->postmarkInviteTemplate,
+                [
+                "name1" => $User->firstName.' '.$User->lastName,
+                "action_url" => $config->signupURL
+                ]);
+            }
         }
+        
         $Mentors['first']['id'] = $Mentor1->id;
         $Mentors['first']['aai'] = $Mentor1->aai;
         $Mentor2 = new User($pdo);
