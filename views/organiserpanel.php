@@ -51,7 +51,20 @@
               <h5 class="card-title"><?php new HTMLString($Application->title, true); ?></h5>
               <p class="card-text"><?php new HTMLString($Application->description, true); ?></p>
               <p class="card-text">Nositelj prijave: <?php $teamMembers=json_decode($Application->teamMembers); new HTMLString($teamMembers->carrier->name . ' <'.$teamMembers->carrier->aai.'>', true) ?></p>
-              <p class="card-text">Podaci prijave: <?php var_dump($Application); ?></p>
+              <p class="card-text">Podaci prijave:</p>
+              <p class="card-text"><b>Mentori: </b> <?php $mentors=json_decode($Application->mentors); new HTMLString(var_export($mentors), true); ?></p>
+              <p class="card-text"><b>Članovi tima: </b> <?php new HTMLString(var_export($teamMembers), true); ?></p>
+              <p class="card-text"><b>Godina: </b> <?php new HTMLString($Application->year, true); ?></p>
+              <p class="card-text"><b>Podaci: </b> <?php new HTMLString(var_export($Application->data), true); ?></p>
+              <p class="card-text"><b>Videozapisi: </b>
+              <?php
+              $vmssID = $App->vmssID;
+            $requestEndpoint = $config->vmssBaseURL."/video/".$vmssID;
+            $response = file_get_contents($requestEndpoint);
+            new HTMLString(var_export($response));
+            ?>
+            </p>
+              <p class="card-text">
               <?php if($Application->status == 1){
               ?>
               <br>Ova prijava <b>nije predana</b> te ju učenici koji u njoj sudjeluju mogu uređivati.

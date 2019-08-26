@@ -105,13 +105,14 @@ switch($route[0]){
         $User = new User($pdo);
         $User->id = $Session->user;
         $User->load();
-        if(stripos($User->email,"@".$config->adminDomain) == FALSE){
+        if(stripos($User->aai,"@".$config->adminDomain) == FALSE){
             header('Location: /dashboard'); die();
         }
         $Application = new Application($pdo);
         $Applications = $Application->byMentor('');
         $Applications2 = $Application->byMentor($Session->aai);
         array_merge($Applications, $Applications2);
+
         unset($Applications2);
         include '../views/organiserpanel.php';
     break;
