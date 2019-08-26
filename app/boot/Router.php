@@ -115,6 +115,10 @@ switch($route[0]){
         unset($Applications2);
         include '../views/organiserpanel.php';
     break;
+    case 'suglasnost':
+        header('Location: https://znanstvenikumeni.org/obrazac-za-suglasnost/');
+        die();
+    break;
     case 'accounts':
         if($route[1] == 'new'){
             $Token = new Token($pdo,null,null,null,'addUser');
