@@ -58,9 +58,10 @@
               <p class="card-text"><b>Podaci: </b> <?php new HTMLString(var_export($Application->data), true); ?></p>
               <p class="card-text"><b>Videozapisi: </b>
               <?php
-              $vmssID = $App->vmssID;
+            $vmssID = $Application->vmssID;
             $requestEndpoint = $config->vmssBaseURL."/video/".$vmssID;
             $response = file_get_contents($requestEndpoint);
+            $response = json_decode($response);
             new HTMLString(var_export($response));
             ?>
             </p>
