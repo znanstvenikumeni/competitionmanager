@@ -77,6 +77,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             <option disabled selected>Odaberite...</option>
             <option value="humanisticke">Humanističke znanosti</option>
             <option value="kemija">Kemija i srodne znanosti</option>
+            <option value="fizika">Fizika i srodne znanosti</option>
             <option value="biomed">Biologija, medicina i srodne znanosti</option>
             <option value="mathcs">Matematika, informatika, elektrotehnika i srodne znanosti</option>
             <option value="ostale">Ostale znanosti / Interdisciplinaran rad</option>

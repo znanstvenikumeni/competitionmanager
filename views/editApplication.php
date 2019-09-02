@@ -80,6 +80,8 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             <option disabled <?php if(!$Data->category){ echo 'selected'; } ?>>Odaberite...</option>
             <option value="humanisticke" <?php if($Data->category == 'humanisticke'){ echo 'selected'; } ?>>Humanističke znanosti</option>
             <option value="kemija" <?php if($Data->category == 'kemija'){ echo 'selected'; } ?>>Kemija i srodne znanosti</option>
+            <option value="fizika" <?php if($Data->category == 'fizika'){ echo 'selected'; } ?>>Fizika i srodne znanosti</option>
+
             <option value="biomed" <?php if($Data->category == 'biomed'){ echo 'selected'; } ?>>Biologija, medicina i srodne znanosti</option>
             <option value="mathcs" <?php if($Data->category == 'mathcs'){ echo 'selected'; } ?>>Matematika, informatika, elektrotehnika i srodne znanosti</option>
             <option value="ostale" <?php if($Data->category == 'ostale'){ echo 'selected'; } ?>>Ostale znanosti / Interdisciplinaran rad</option>
