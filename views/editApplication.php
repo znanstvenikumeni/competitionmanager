@@ -108,7 +108,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             $Competitor = $User;
         }
         else{
-            $disabled = 'readonly';
+            $disabled = 'readonly onclick="return false;"';
             $Competitor = new User($pdo);
             $Competitor->aai = json_decode($Application->teamMembers)->carrier->aai;
             $Competitor->load();
@@ -139,7 +139,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             $Competitor = $User;
         }
         else{
-            $disabled = 'readonly';
+            $disabled = 'readonly onclick="return false;"';
             $Competitor = new User($pdo);
             $Competitor->aai = json_decode($Application->teamMembers)->secondary->aai;
             $Competitor->load();
