@@ -173,6 +173,7 @@ switch($route[0]){
         if(!(password_verify($_POST['password'], $User->password))){
             new LogEntry($pdo, 'AccountSecurity/LoginFail/WrongPassword', 'addSession', 'failed',null, $_POST['aai'], null);
             header('Location: /accounts/signin/error');
+            die();
         }
         $Session = new Session($pdo);
         $Session->config = $config;
