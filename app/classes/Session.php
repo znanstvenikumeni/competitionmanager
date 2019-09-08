@@ -53,7 +53,7 @@ class Session{
     public function create(){
         $allow = $this->checkAttempts();
         if($allow < 0){
-            new LogEntry($pdo, 'AccountSecurity/LoginFail/WrongPassword', 'addSession', 'failed',null, $this->aai, null);
+            new LogEntry($this->conn, 'AccountSecurity/LoginFail/WrongPassword', 'addSession', 'failed',null, $this->aai, null);
             header('Location: /accounts/signin/tooManyAttempts');
             die();
         }
