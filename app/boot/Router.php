@@ -90,7 +90,7 @@ switch($route[0]){
         $Application = new Application($pdo);
         $Applications = $Application->byMentor($Session->user);
         $Applications2 = $Application->byMentor($User->aai);
-        array_merge($Applications, $Applications2);
+        $Applications = array_merge($Applications, $Applications2);
         unset($Applications2);
         include '../views/mentorpanel.php';
     break;
