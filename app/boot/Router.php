@@ -435,9 +435,9 @@ switch($route[0]){
         if($_POST['aaiMentor2']){
             $Mentor = new User($pdo);
             $Mentor->aai = $_POST['aaiMentor1'];
-            $Mentors['first']['aai'] = $Mentor->aai;
+            $Mentors['second']['aai'] = $Mentor->aai;
             $Mentor->load();
-            $Mentors['first']['name'] = $Mentor->firstName.' '.$Mentor->lastName;
+            $Mentors['second']['name'] = $Mentor->firstName.' '.$Mentor->lastName;
             if($Mentor->id) $MentorsValid = true;
             else $MentorsValid = false;
         }
