@@ -19,5 +19,6 @@
     "postmarkInviteTemplate": 13251986,
     "postmarkApplicationSubmissionTemplate": 13312528,
     "signupURL": "https://prijave.znanstvenikumeni.org/accounts/new",
-    "adminDomain": "znanstvenikumeni.org"
+    "adminDomain": "znanstvenikumeni.org",
+    "publicAccessEnabled": false
 }

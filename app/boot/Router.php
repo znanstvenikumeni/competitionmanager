@@ -26,7 +26,65 @@ switch($route[0]){
             die();
         }
     break;
-    
+    case 'public':
+    	if($config->publicAccessEnabled != true){
+	    	$Session = new Session($pdo);
+	        $Session->token = $_COOKIE['cmsession'];
+	        if(!$Session->verify()){
+	                new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+	                header('Location: /accounts/signin');
+	                die();
+	        }
+	        $User = new User($pdo);
+	        $User->id = $Session->user;
+	        $User->load();
+	        if(stripos($User->aai,"@".$config->adminDomain) == FALSE){
+	            header('Location: /dashboard'); die();
+	        }
+    	}
+    	if(!isset($route[1])){
+    		$ApplicationFactory = new Application($pdo);
+       			$Applications = $ApplicationFactory->byMentor('');
+       			foreach($Applications as &$Application){
+       				$Application->mentors = json_decode($Application->mentors);
+       				foreach($Application->mentors as &$Mentor){
+       					$Mentor->aai = 'ProtectedValue';
+       				}
+       				$Application->teamMembers = json_decode($Application->teamMembers);
+       				foreach($Application->teamMembers as &$Member){
+       					$MemberAAI = $Member->aai;
+       					$MemberUser = new User($pdo);
+       					$MemberUser->aai = $MemberAAI;
+       					$MemberUser->load();
+       					$Member->name = $MemberUser->firstName.' '.$MemberUser->lastName;
+       					$Member->aai = 'ProtectedValue';
+       					$Member->age = 'ProtectedValue';
+       					$Member->zsem = 'ProtectedValue';
+       				}
+       			}
+       			include '../views/public.php';
+    	}
+    	if(isset($route[1])){
+    		switch ($route[1]) {
+    			case 'account':
+    				include '../views/account.php';
+    				break;
+    			case 'video':
+    				$Application = new Application($pdo);
+    				$Application->id = $route[2];
+    				$Application->load();
+    				include '../views/video.php';
+    				break;
+    			default:
+    				# code...
+    				break;
+    		}
+    	} 
+    break;
+    case 'publicAPI':
+    	$APIRequest = new APIRequest($pdo, array_splice($route, 1));
+    	$APIRequest->handle();
+    break;
     case 'getUploadEndpoint':
         $Session = new Session($pdo);
         $Session->token = $_COOKIE['cmsession'];
