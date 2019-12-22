@@ -29,14 +29,15 @@
 						<div class="card card-1">
 							<h2 class="card-title"><?php new HTMLString($Application->title, true); ?></h2>
 							<p class="card-content"><?php new HTMLString($Application->description, true); ?></p>
-							<p class="metadata">Nositelj rada: <?php new HTMLString($Application->teamMembers->carrier->name, true); ?>, <?php new HTMLString($Application->teamMembers->carrier->school, true);  ?></p></div>
+							<p class="metadata">Nositelj rada: <?php new HTMLString($Application->teamMembers->carrier->name, true); ?>, <?php new HTMLString($Application->teamMembers->carrier->school, true);  ?></p>
+						</div></a>
+				</div>
 				<?php
 				}
 				?>
 				</div>
 			</div>
 		</div>
-	</div>
 	<nav class="navbar fixed-bottom navbar-light bg-light card-2">
   <a class="navbar-link-bottom" href="/public"><i class="material-icons">
 video_library
