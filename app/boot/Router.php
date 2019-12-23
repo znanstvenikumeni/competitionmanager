@@ -38,8 +38,7 @@ switch($route[0]){
 	        $User = new User($pdo);
 	        $User->id = $Session->user;
 	        $User->load();
-	        if(stripos($User->aai,"@".$config->adminDomain) == FALSE){
-	            header('Location: /dashboard'); die();
+ 			if(stripos($User->aai,"@".$config->adminDomain) != strlen($User->aai)-strlen('@'.$config->adminDomain)){	            header('Location: /dashboard'); die();
 	        }
     	}
     	if(!isset($route[1])){
@@ -163,7 +162,7 @@ switch($route[0]){
         $User = new User($pdo);
         $User->id = $Session->user;
         $User->load();
-        if(stripos($User->aai,"@".$config->adminDomain) == FALSE){
+        if(stripos($User->aai,"@".$config->adminDomain) != strlen($User->aai)-strlen('@'.$config->adminDomain)){
             header('Location: /dashboard'); die();
         }
         $Application = new Application($pdo);
