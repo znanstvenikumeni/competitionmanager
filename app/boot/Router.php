@@ -304,6 +304,10 @@ switch($route[0]){
             throw new Exception('Invalid data entered');
             die();
         }
+        if(stripos($User->aai, $config->adminDomain) !== FALSE){
+        	throw new Exception('Attack vector detected');
+        	die();
+        }
         $User->password = $_POST['password']; // it gets hashed in User.php and doesn't get saved in plaintext, don't worry
         if(strlen($User->password) < 8){
             include '../views/errors/invalidData.php';
