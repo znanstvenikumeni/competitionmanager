@@ -11,11 +11,15 @@ class ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '979dffec6fa5205cabd2c2cd1e9e6b3a' => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src/Http/Psr7/functions.php',
+        '6783aef8c489bbc166eee2536fe605d5' => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'P' => 
         array (
+            'Psr\\SimpleCache\\' => 16,
+            'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
         ),
         'G' => 
@@ -32,9 +36,21 @@ class ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c
         array (
             'Bugsnag\\' => 8,
         ),
+        'A' => 
+        array (
+            'Algolia\\AlgoliaSearch\\' => 22,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
@@ -58,6 +74,10 @@ class ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c
         'Bugsnag\\' => 
         array (
             0 => __DIR__ . '/..' . '/bugsnag/bugsnag/src',
+        ),
+        'Algolia\\AlgoliaSearch\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src',
         ),
     );
 

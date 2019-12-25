@@ -80,6 +80,38 @@ switch($route[0]){
     		}
     	} 
     break;
+    case 'indexWorker':
+    	if(($route[1] ?? null) != $config->indexWorkerToken) die(':(');
+		$Algolia = Algolia\AlgoliaSearch\SearchClient::create(
+		  $keys->algoliaKeyPublic,
+		  $keys->algoliaKeyPrivate
+		);
+
+		$index = $Algolia->initIndex($config->algoliaIndex);
+		$ApplicationFactory = new Application($pdo);
+		$Applications = $ApplicationFactory->byMentor('');
+		foreach($Applications as &$Application){
+			$Application->mentors = json_decode($Application->mentors);
+			foreach($Application->mentors as &$Mentor){
+				$Mentor->aai = 'ProtectedValue';
+			}
+			$Application->teamMembers = json_decode($Application->teamMembers);
+			foreach($Application->teamMembers as &$Member){
+				$MemberAAI = $Member->aai;
+				$MemberUser = new User($pdo);
+				$MemberUser->aai = $MemberAAI;
+				$MemberUser->load();
+				$Member->name = $MemberUser->firstName.' '.$MemberUser->lastName;
+				$Member->aai = 'ProtectedValue';
+				$Member->age = 'ProtectedValue';
+				$Member->zsem = 'ProtectedValue';
+			}
+		}
+		foreach($Applications as &$App){
+			$App = (array)$App;
+		}
+		$index->saveObjects((array)$Applications, ['objectIDKey' => 'id']);
+	break;
     case 'publicAPI':
     	$APIRequest = new APIRequest($pdo, array_splice($route, 1));
     	$APIRequest->handle();

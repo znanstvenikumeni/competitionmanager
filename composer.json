@@ -1,6 +1,7 @@
 {
     "require": {
         "bugsnag/bugsnag": "^3.0",
-        "wildbit/postmark-php": "^2.8"
+        "wildbit/postmark-php": "^2.8",
+        "algolia/algoliasearch-client-php": "^2.5"
     }
 }
