@@ -33,6 +33,7 @@
             <input type="password" name="password" id="password" class="form-control" placeholder="Unesite svoju lozinku." required>
             
             <button class="btn btn-primary" type="submit" required>Nastavi &rarr;</button>
+            <br><br>
             <small>Znanstvenik u meni! koristi kolačiće kako bi zapamtio tvoju prijavu. Nastavkom se slažeš s pohranom i korištenjem kolačića o tvojoj prijavi na okvirno 3 sata.</small>
 
         </div>
