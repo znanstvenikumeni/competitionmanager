@@ -45,7 +45,9 @@
 </video>
 	<h2 class="video-title"><?php new HTMLString($Application->title, true); ?></h2>
 	<p class="video-description"><?php new HTMLString($Application->description, true); ?></p>
+	<div class="alert alert-info"><p class="voting"><b>Glasanje za radove</b>: možete glasati samo jednom i za do pet radova, pri čemu je svaki glas jednakovrijedan. Glasovi javnosti nose 10% ukupne ocjene rada. Za glasanje je potreban Google račun. Glasanje će biti otvoreno do ponedjeljka, 3. 2. 2020. u 12:00. <a href="https://forms.gle/fgBocM3bUiFAbeRR6" class="alert-link">Kliknite ovdje kako biste glasali.</a></p></div>
 	<hr>
+
 	<b>Podaci rada</b>
 	<p class="video-metadata">Sudionici rada: <ul>
 		<?php

@@ -21,6 +21,7 @@
 		<div class="container">
 			<h2 class="screen-title">Prijavljeni radovi</h2>
 			<p class="subtitle screen-explanation">Radovi su sortirani po redu prijave.</p>
+			<div class="alert alert-info"><p class="voting"><b>Glasanje za radove</b>: možete glasati samo jednom i za do pet radova, pri čemu je svaki glas jednakovrijedan. Glasovi javnosti nose 10% ukupne ocjene rada. Za glasanje je potreban Google račun. Glasanje će biti otvoreno do ponedjeljka, 3. 2. 2020. u 12:00. <a href="https://forms.gle/fgBocM3bUiFAbeRR6" class="alert-link">Kliknite ovdje kako biste glasali.</a></p></div>
 			<div class="row">
 				<?php foreach($Applications as $Application){
 				?>
@@ -79,6 +80,10 @@ public
 .card-5 {
   box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 }
+.col-lg-4:last-of-type{
+  display:none;
+}
+
 
 	</style>
     <!-- Optional JavaScript -->

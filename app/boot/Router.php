@@ -7,6 +7,12 @@ if($_SERVER['REQUEST_METHOD'] == 'OPTIONS'){
     header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
     die();
 }
+if($route[0] != 'organiserpanel'){
+   if($config->publicAccessEnabled == true && $route[0] != 'public'){
+        header('Location: /public');
+    } 
+}
+
 switch($route[0]){
     case '':
         if(isset($_COOKIE['cmsession'])){
