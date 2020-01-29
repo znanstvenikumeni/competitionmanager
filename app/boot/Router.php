@@ -7,7 +7,7 @@ if($_SERVER['REQUEST_METHOD'] == 'OPTIONS'){
     header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
     die();
 }
-if($route[0] != 'organiserpanel' && $route[0] != 'accounts'){
+if($route[0] != 'organiserpanel' || $route[0] != 'accounts'){
    if($config->publicAccessEnabled == true && $route[0] != 'public'){
         header('Location: /public');
     } 
