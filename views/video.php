@@ -22,28 +22,56 @@
 	</nav>
 	<div class="app-container">
 		<div class="container">
-			<?php 
-			$vmssID = $Application->vmssID;
-			$vmssBase = $config->vmssBaseURL;
-            $requestEndpoint = $vmssBase."/video/".$vmssID;
-            $response = file_get_contents($requestEndpoint);
-            $response = json_decode($response);
-            $response->video->files = json_decode($response->video->files);
-			?>
-			
-	<video id="player" playsinline controls data-plyr-config='{ "quality": { default: 1080, options: [1080, 720, 480, 360] } }'>
-    <source src="<?php echo $vmssBase.'/'.$response->video->files->mp4->{'1080p'}; ?>" size="1080" type="video/mp4" />
-   	<source src="<?php echo $vmssBase.'/'.$response->video->files->mp4->{'720p'}; ?>" size="720" type="video/mp4" />
-    <source src="<?php echo $vmssBase.'/'.$response->video->files->mp4->{'480p'}; ?>" size="480" type="video/mp4" />
-    <source src="<?php echo $vmssBase.'/'.$response->video->files->mp4->{'360p'}; ?>" size="360" type="video/mp4" />
+			<?php
+            $Application->data = json_decode($Application->data);
 
-    <source src="<?php echo $vmssBase.'/'.$response->video->files->webm->{'1080p'}; ?>" size="1080" type="video/webm" />
-    <source src="<?php echo $vmssBase.'/'.$response->video->files->webm->{'720p'}; ?>" size="720" type="video/webm" />
-    <source src="<?php echo $vmssBase.'/'.$response->video->files->webm->{'480p'}; ?>" size="480" type="video/webm" />
-    <source src="<?php echo $vmssBase.'/'.$response->video->files->webm->{'360p'}; ?>" size="360" type="video/webm" />
+                $vmssID = $Application->vmssID;
+                $vmssBase = $config->vmssBaseURL;
+                $requestEndpoint = $vmssBase . "/video/" . $vmssID;
+                $response = file_get_contents($requestEndpoint);
+                $response = json_decode($response);
+                $response->video->files = json_decode($response->video->files);
+                if(!$Application->data->hideVideo) {
+                    ?>
 
-</video>
+                    <video id="player" playsinline controls
+                           data-plyr-config='{ "quality": { default: 1080, options: [1080, 720, 480, 360] } }'>
+                        <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'1080p'}; ?>"
+                                size="1080" type="video/mp4"/>
+                        <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'720p'}; ?>" size="720"
+                                type="video/mp4"/>
+                        <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'480p'}; ?>" size="480"
+                                type="video/mp4"/>
+                        <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'360p'}; ?>" size="360"
+                                type="video/mp4"/>
+
+                        <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'1080p'}; ?>"
+                                size="1080" type="video/webm"/>
+                        <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'720p'}; ?>"
+                                size="720" type="video/webm"/>
+                        <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'480p'}; ?>"
+                                size="480" type="video/webm"/>
+                        <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'360p'}; ?>"
+                                size="360" type="video/webm"/>
+
+                    </video>
+                    <?php
+                }
+                else{
+                    ?>
+                    <div class="alert alert-warning"><?php new HTMLString($Application->data->hideVideo, true);?></div>
+            <?php
+
+                }
+            ?>
 	<h2 class="video-title"><?php new HTMLString($Application->title, true); ?></h2>
+            <?php
+            if(isset($Application->data->notice)){
+                ?>
+            <div class="alert alert-danger"><?php new HTMLString($Application->data->notice, true); ?></div>
+            <?php
+            }
+            ?>
 	<p class="video-description"><?php new HTMLString($Application->description, true); ?></p>
 	<div class="alert alert-info"><p class="voting"><b>Glasanje za radove</b>: možete glasati samo jednom i za do pet radova, pri čemu je svaki glas jednakovrijedan. Glasovi javnosti nose 10% ukupne ocjene rada. Za glasanje je potreban Google račun. Glasanje će biti otvoreno do ponedjeljka, 3. 2. 2020. u 12:00. <a href="https://forms.gle/fgBocM3bUiFAbeRR6" class="alert-link">Kliknite ovdje kako biste glasali.</a></p></div>
 	<hr>
@@ -51,6 +79,7 @@
 	<b>Podaci rada</b>
 	<p class="video-metadata">Sudionici rada: <ul>
 		<?php
+
 		$Application->teamMembers = json_decode($Application->teamMembers);
 		 foreach($Application->teamMembers as $Member){
 			echo '<li>';
@@ -74,7 +103,7 @@
 		}
 		?>
 	</ul>
-	Godina prijave: <?php new HTMLString($Application->year, true); ?> &middot; Oznaka kategorije: <?php $Application->data = json_decode($Application->data); new HTMLString($Application->data->category, true); ?>
+	Godina prijave: <?php new HTMLString($Application->year, true); ?> &middot; Oznaka kategorije: <?php  new HTMLString($Application->data->category, true); ?>
 		</div>
 	</div>
 	<br><br><br><br>

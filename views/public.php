@@ -24,6 +24,7 @@
 			<div class="alert alert-info"><p class="voting"><b>Glasanje za radove</b>: možete glasati samo jednom i za do pet radova, pri čemu je svaki glas jednakovrijedan. Glasovi javnosti nose 10% ukupne ocjene rada. Za glasanje je potreban Google račun. Glasanje će biti otvoreno do ponedjeljka, 3. 2. 2020. u 12:00. <a href="https://forms.gle/fgBocM3bUiFAbeRR6" class="alert-link">Kliknite ovdje kako biste glasali.</a></p></div>
 			<div class="row">
 				<?php foreach($Applications as $Application){
+				    if($Application->selfHide ?? null) continue;
 				?>
 				<div class="col-lg-4">
 					<a href="/public/video/<?php echo $Application->id; ?>" class="text-decoration-none">

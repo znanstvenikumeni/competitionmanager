@@ -7,10 +7,12 @@ if($_SERVER['REQUEST_METHOD'] == 'OPTIONS'){
     header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
     die();
 }
-if($route[0] != 'organiserpanel' || $route[0] != 'accounts'){
-   if($config->publicAccessEnabled == true && $route[0] != 'public'){
+
+if($config->publicAccessEnabled == true && $config->applicationsEnabled == false){
+    if(!$route[0]){
         header('Location: /public');
-    } 
+        die();
+    }
 }
 
 switch($route[0]){
@@ -51,13 +53,21 @@ switch($route[0]){
     		$ApplicationFactory = new Application($pdo);
        			$Applications = $ApplicationFactory->byMentor('');
        			foreach($Applications as &$Application){
+       			    if($Application->year > $config->lastOrganisationalYearToShowOnPublic) {
+       			        $Application = NULL;
+       			        $Application->selfHide = true;
+                    }
        				$Application->mentors = json_decode($Application->mentors);
        				foreach($Application->mentors as &$Mentor){
        					$Mentor->aai = 'ProtectedValue';
        				}
        				$Application->teamMembers = json_decode($Application->teamMembers);
        				foreach($Application->teamMembers as &$Member){
-       					$MemberAAI = $Member->aai;
+                        if ($Application->year > $config->lastOrganisationalYearToShowOnPublic) {
+                            $Application = NULL;
+                            $Application->selfHide = true;
+                        }
+                        $MemberAAI = $Member->aai;
        					$MemberUser = new User($pdo);
        					$MemberUser->aai = $MemberAAI;
        					$MemberUser->load();
@@ -78,7 +88,10 @@ switch($route[0]){
     				$Application = new Application($pdo);
     				$Application->id = $route[2];
     				$Application->load();
-    				include '../views/video.php';
+                    if ($Application->year > $config->lastOrganisationalYearToShowOnPublic) {
+                        die();
+                    }
+                    include '../views/video.php';
     				break;
     			default:
     				# code...
@@ -203,13 +216,20 @@ switch($route[0]){
         if(stripos($User->aai,"@".$config->adminDomain) != strlen($User->aai)-strlen('@'.$config->adminDomain)){
             header('Location: /dashboard'); die();
         }
-        $Application = new Application($pdo);
-        $Applications = $Application->byMentor('');
-        $Applications2 = $Application->byMentor($Session->aai);
-        array_merge($Applications, $Applications2);
+        if(!isset($route[1])){
+            $Application = new Application($pdo);
+            $Applications = $Application->byMentor('');
+            $Applications2 = $Application->byMentor($Session->aai);
+            array_merge($Applications, $Applications2);
 
-        unset($Applications2);
-        include '../views/organiserpanel.php';
+            unset($Applications2);
+            include '../views/organiserpanel.php';
+        }
+        else{
+            if($route[1] == 'users'){
+                include '../views/usermanager.php';
+            }
+        }
     break;
     case 'suglasnost':
         header('Location: https://znanstvenikumeni.org/obrazac-za-suglasnost/');
@@ -387,6 +407,9 @@ switch($route[0]){
     break;
     
     case 'application':
+        if($config->applicationsEnabled == false){
+            header('Location: /public'); die();
+        }
         if($route[1] == 'new'){
             $Session = new Session($pdo);
             $Session->token = $_COOKIE['cmsession'];

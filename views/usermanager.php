@@ -41,52 +41,9 @@
         </ul>
       </div>
       <div class="col-10 main">
-        <p class="lead">All applications</p>
-
-        <?php
-          foreach($Applications as $Application){
-          ?>
-          <div class="card">
-            <div class="card-header">
-              Applications
-            </div>
-            <div class="card-body">
-              <h5 class="card-title"><?php new HTMLString($Application->title, true); ?></h5>
-              <p class="card-text"><?php new HTMLString($Application->description, true); ?></p>
-              <p class="card-text">Application carrier: <?php $teamMembers=json_decode($Application->teamMembers); new HTMLString($teamMembers->carrier->name . ' <'.$teamMembers->carrier->aai.'>', true) ?></p>
-              <p class="card-text">Application data:</p>
-              <p class="card-text"><b>Mentors: </b> <?php $mentors=json_decode($Application->mentors); new HTMLString(var_export($mentors), true); ?></p>
-              <p class="card-text"><b>Team members: </b> <?php new HTMLString(var_export($teamMembers), true); ?></p>
-              <p class="card-text"><b>Year: </b> <?php new HTMLString($Application->year, true); ?></p>
-              <p class="card-text"><b>Data: </b> <?php new HTMLString(var_export($Application->data), true); ?></p>
-              <p class="card-text"><b>Videos: </b>
-              <?php
-            $vmssID = $Application->vmssID;
-            $requestEndpoint = $config->vmssBaseURL."/video/".$vmssID;
-            $response = file_get_contents($requestEndpoint);
-            $response = json_decode($response);
-            new HTMLString(var_export($response));
-            ?>
-            </p>
-              <p class="card-text">
-              <?php if($Application->status == 1){
-              ?>
-              <br>Ova prijava <b>nije predana</b> te ju učenici koji u njoj sudjeluju mogu uređivati.
-              <?php
-              }
-              else{
-                ?>
-                <br>Ova prijava <b>je predana</b> i više se ne može uređivati.
-                <?php
-
-              }
-              ?>
-            </div>
-          </div>
-        <?php
-          }
-        if(count($Applications) == 0){echo '<p>Nema radova na natjecanju.</p>';} 
-        ?>
+        <form action="/organiserpanel/user" method="post">
+          <input type="email" name="aai" placeholder="Enter a part of the user's AAI" class="form-control">
+          <input type="submit" class="btn btn-primary" value="Search"> 
       </div>
     </div>
     
