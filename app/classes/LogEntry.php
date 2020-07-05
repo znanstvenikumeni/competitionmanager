@@ -30,7 +30,7 @@ class LogEntry{
     }
 
     private function logToFile(){
-        file_put_contents("../logs/security.log", $this->formatLogEntry(), FILE_APPEND);
+        file_put_contents("../storage/logs/security.log", $this->formatLogEntry(), FILE_APPEND);
     }
 
     private function logToDatabase(){
