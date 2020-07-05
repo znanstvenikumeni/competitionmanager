@@ -15,8 +15,8 @@
 
   </head>
   <body>
-	<nav class="navbar navbar-light bg-light card-2">
-	  <a class="navbar-brand" href="/public">Znanstvenik u meni!</a>
+	<nav class="navbar navbar-dark bg-light card-2">
+        <a class="navbar-brand" href="/public"><img src="https://znanstvenikumeni.org/wp-content/uploads/2019/05/zum-logo-black-w.png" style="max-height: 64px;" ?></a>
 	  
 	 
 	</nav>
@@ -73,7 +73,6 @@
             }
             ?>
 	<p class="video-description"><?php new HTMLString($Application->description, true); ?></p>
-	<div class="alert alert-info"><p class="voting"><b>Glasanje za radove</b>: možete glasati samo jednom i za do pet radova, pri čemu je svaki glas jednakovrijedan. Glasovi javnosti nose 10% ukupne ocjene rada. Za glasanje je potreban Google račun. Glasanje će biti otvoreno do ponedjeljka, 3. 2. 2020. u 12:00. <a href="https://forms.gle/fgBocM3bUiFAbeRR6" class="alert-link">Kliknite ovdje kako biste glasali.</a></p></div>
 	<hr>
 
 	<b>Podaci rada</b>
@@ -93,7 +92,7 @@
 		}
 		?>
 	</ul>
-	Mentori rada: <ul>
+	<p>Mentori rada:</p> <ul>
 		<?php
 		$Application->mentors = json_decode($Application->mentors);
 		foreach($Application->mentors as $Mentor){
@@ -103,11 +102,11 @@
 		}
 		?>
 	</ul>
-	Godina prijave: <?php new HTMLString($Application->year, true); ?> &middot; Oznaka kategorije: <?php  new HTMLString($Application->data->category, true); ?>
+	<p>Godina prijave: <?php new HTMLString($Application->year, true); ?> &middot; Oznaka kategorije: <?php  new HTMLString($Application->data->category, true); ?></p>
 		</div>
 	</div>
 	<br><br><br><br>
-	<nav class="navbar fixed-bottom navbar-light bg-light card-2">
+	<nav class="navbar fixed-bottom navbar-dark bg-light card-2">
   <a class="navbar-link-bottom" href="/public"><i class="material-icons">
 video_library
 </i></a>
@@ -117,40 +116,10 @@ public
 </i></a>
 </nav>
 	<style>
-		a:link, a:visited, a:hover, a:focus{
-			color: #343a40;
-		}
-		.card{
-			padding: 16px;
-		}
+	   <style>
+                    <?php echo file_get_contents(__DIR__.'/css/public.css'); ?>
 
-.card-1 {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-}
-
-.card-1:hover {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-}
-
-.card-2 {
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
-
-.card-3 {
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-}
-
-.card-4 {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-}
-
-.card-5 {
-  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-}
-video{
-	margin-bottom: 64px;
-}
+                </style>
 	</style>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

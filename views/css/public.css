@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display|Muli&display=swap');
+.spacer{
+	margin-top: 300px;
+}
+a:link, a:visited, a:hover, a:focus{
+	color: #343a40;
+}
+.card h2, .card p{
+	background-color: #263238;
+	padding: 16px;
+	color: #fafafa;
+}
+.card{
+	background-color: #263238;
+	color: #fafafa;
+	border: 0;
+}
+.card-1 {
+	box-shadow: 0 1px 3px #78909C, 0 1px 2px #ECEFF1;
+	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.card-1:hover {
+	box-shadow: 0 14px 28px #90A4AE, 0 10px 10px #ECEFF1;
+}
+
+.card-2 {
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.card-3 {
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.card-4 {
+	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.card-5 {
+	box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+.col-lg-4:last-of-type{
+	display:none;
+}
+body{
+	font-family: 'Playfair Display', 'Times New Roman', serif;
+	background-color: #000;
+	color: #FAFAFA;
+}
+p, li{
+	font-family: 'Muli', 'Helvetica', 'Helvetica Neue', 'Arial', sans-serif;
+}
+.bg-light{
+	background-color: #263238 !important;
+} 
+.navbar-link-bottom{
+	color: #FAFAFA !important;
+}
+.app-container{
+	margin-top: 128px;
+	margin-bottom: 128px;
+}
