@@ -46,102 +46,102 @@
 <main class="container">
     <section class="introduction">
         <div id="app">
-			<?php
+            <?php
             $Application->data = json_decode($Application->data);
 
-                $vmssID = $Application->vmssID;
-                $vmssBase = $config->vmssBaseURL;
-                $requestEndpoint = $vmssBase . "/video/" . $vmssID;
-                $response = file_get_contents($requestEndpoint);
-                $response = json_decode($response);
-                $response->video->files = json_decode($response->video->files);
-                if(!$Application->data->hideVideo) {
-                    ?>
+            $vmssID = $Application->vmssID;
+            $vmssBase = $config->vmssBaseURL;
+            $requestEndpoint = $vmssBase . "/video/" . $vmssID;
+            $response = file_get_contents($requestEndpoint);
+            $response = json_decode($response);
+            $response->video->files = json_decode($response->video->files);
+            if(!$Application->data->hideVideo) {
+                ?>
 
-                    <video id="player" playsinline controls
-                           data-plyr-config='{ "quality": { default: 1080, options: [1080, 720, 480, 360] } }'>
-                        <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'1080p'}; ?>"
-                                size="1080" type="video/mp4"/>
-                        <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'720p'}; ?>" size="720"
-                                type="video/mp4"/>
-                        <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'480p'}; ?>" size="480"
-                                type="video/mp4"/>
-                        <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'360p'}; ?>" size="360"
-                                type="video/mp4"/>
+                <video id="player" playsinline controls
+                       data-plyr-config='{ "quality": { default: 1080, options: [1080, 720, 480, 360] } }'>
+                    <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'1080p'}; ?>"
+                            size="1080" type="video/mp4"/>
+                    <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'720p'}; ?>" size="720"
+                            type="video/mp4"/>
+                    <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'480p'}; ?>" size="480"
+                            type="video/mp4"/>
+                    <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'360p'}; ?>" size="360"
+                            type="video/mp4"/>
 
-                        <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'1080p'}; ?>"
-                                size="1080" type="video/webm"/>
-                        <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'720p'}; ?>"
-                                size="720" type="video/webm"/>
-                        <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'480p'}; ?>"
-                                size="480" type="video/webm"/>
-                        <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'360p'}; ?>"
-                                size="360" type="video/webm"/>
+                    <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'1080p'}; ?>"
+                            size="1080" type="video/webm"/>
+                    <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'720p'}; ?>"
+                            size="720" type="video/webm"/>
+                    <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'480p'}; ?>"
+                            size="480" type="video/webm"/>
+                    <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'360p'}; ?>"
+                            size="360" type="video/webm"/>
 
-                    </video>
-                    <?php
-                }
-                else{
-                    ?>
-                    <div class="alert alert-warning"><?php new HTMLString($Application->data->hideVideo, true);?></div>
-            <?php
+                </video>
+                <?php
+            }
+            else{
+                ?>
+                <div class="alert alert-warning"><?php new HTMLString($Application->data->hideVideo, true);?></div>
+                <?php
 
-                }
+            }
             ?>
-	<h2 class="video-title"><?php new HTMLString($Application->title, true); ?></h2>
+            <h2 class="video-title"><?php new HTMLString($Application->title, true); ?></h2>
             <?php
             if(isset($Application->data->notice)){
                 ?>
-            <div class="alert alert-danger"><?php new HTMLString($Application->data->notice, true); ?></div>
-            <?php
+                <div class="alert alert-danger"><?php new HTMLString($Application->data->notice, true); ?></div>
+                <?php
             }
             ?>
-	<p class="video-description"><?php new HTMLString($Application->description, true); ?></p>
-	<hr>
+            <p class="video-description"><?php new HTMLString($Application->description, true); ?></p>
+            <hr>
 
-	<b>Podaci rada</b>
-	<p class="video-metadata">Sudionici rada: <ul>
-		<?php
+            <b>Podaci rada</b>
+            <p class="video-metadata">Sudionici rada: <ul>
+                <?php
 
-		$Application->teamMembers = json_decode($Application->teamMembers);
-		 foreach($Application->teamMembers as $Member){
-			echo '<li>';
-			$UserFactory = new User($pdo);
-			$UserFactory->aai = $Member->aai;
-			$UserFactory->load();
-			new HTMLString($UserFactory->firstName.' '.$UserFactory->lastName, true);
-			echo ', ';
-			new HTMLString($Member->school, true);
-			echo '</li>';
-		}
-		?>
-	</ul>
-	<p>Mentori rada:</p> <ul>
-		<?php
-		$Application->mentors = json_decode($Application->mentors);
-		foreach($Application->mentors as $Mentor){
-			echo '<li>';
-			new HTMLString($Mentor->name, true);
-			echo '</li>';
-		}
-		?>
-	</ul>
-	<p>Godina prijave: <?php new HTMLString($Application->year, true); ?> &middot; Oznaka kategorije: <?php  new HTMLString($Application->data->category, true); ?></p>
-		</div>
-	</div>
-	<br><br><br><br>
+                $Application->teamMembers = json_decode($Application->teamMembers);
+                foreach($Application->teamMembers as $Member){
+                    echo '<li>';
+                    $UserFactory = new User($pdo);
+                    $UserFactory->aai = $Member->aai;
+                    $UserFactory->load();
+                    new HTMLString($UserFactory->firstName.' '.$UserFactory->lastName, true);
+                    echo ', ';
+                    new HTMLString($Member->school, true);
+                    echo '</li>';
+                }
+                ?>
+            </ul>
+            <p>Mentori rada:</p> <ul>
+                <?php
+                $Application->mentors = json_decode($Application->mentors);
+                foreach($Application->mentors as $Mentor){
+                    echo '<li>';
+                    new HTMLString($Mentor->name, true);
+                    echo '</li>';
+                }
+                ?>
+            </ul>
+            <p>Godina prijave: <?php new HTMLString($Application->year, true); ?> &middot; Oznaka kategorije: <?php  new HTMLString($Application->data->category, true); ?></p>
+        </div>
+        </div>
+        <br><br><br><br>
 
-	<style>
+        <style>
 
-	</style>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script>
-    	const player = new Plyr('#player');
-	</script>
+        </style>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script>
+            const player = new Plyr('#player');
+        </script>
 
-  </body>
+</body>
 </html>

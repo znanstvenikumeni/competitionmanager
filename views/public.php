@@ -143,7 +143,7 @@
     }
     function parseVideo(video){
         videoHTML = `<div class="row breather" onclick="openVideo(${video.id})"><div class="col-md-4" id="thumb-${video.vmssID}"></div><div class="col-md-8"><h2>${video.title}</h2><p class="description">${video.description}</p></div></div>`;
-       document.getElementById("videos").insertAdjacentHTML("beforeend", videoHTML);
+        document.getElementById("videos").insertAdjacentHTML("beforeend", videoHTML);
         fetch('https://vmss.znanstvenikumeni.org/video/'+video.vmssID).then(response=>response.json()).then(data=> {
             videoData = JSON.parse(data.video.data);
             console.log(videoData, data);
