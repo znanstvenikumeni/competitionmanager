@@ -16,10 +16,10 @@
   </head>
   <body>
 <nav class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Znanstvenik u meni! * Together for Knowledge</a>
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Znanstvenik u meni</a>
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
-      <a class="nav-link" href="/accounts/signout">Sign out (<?php new HTMLString($User->firstName.' '.$User->lastName, true); ?>)</a>
+      <a class="nav-link" href="/accounts/signout">Odjava (<?php new HTMLString($User->firstName.' '.$User->lastName, true); ?>)</a>
     </li>
   </ul>
 </nav>
@@ -30,20 +30,21 @@
     <div class="col-2 sidebar">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link" href="/organiserpanel">Organiser panel</a>
+            <a class="nav-link" href="/organiserpanel">Organizatorska ploča</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/organiserpanel/users">User management</a>
+            <a class="nav-link" href="/organiserpanel/users">Korisnici</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/preferences">Preferences</a>
+            <a class="nav-link" href="/preferences">Postavke</a>
           </li>
         </ul>
       </div>
       <div class="col-10 main">
-        <p class="lead">All applications</p>
-
+        <p class="lead">Sve prijave</p>
+        <p>Poredane obrnuto kronološki.</p>
         <?php
+        array_reverse($Applications);
           foreach($Applications as $Application){
           ?>
           <div class="card">
@@ -53,13 +54,13 @@
             <div class="card-body">
               <h5 class="card-title"><?php new HTMLString($Application->title, true); ?></h5>
               <p class="card-text"><?php new HTMLString($Application->description, true); ?></p>
-              <p class="card-text">Application carrier: <?php $teamMembers=json_decode($Application->teamMembers); new HTMLString($teamMembers->carrier->name . ' <'.$teamMembers->carrier->aai.'>', true) ?></p>
-              <p class="card-text">Application data:</p>
-              <p class="card-text"><b>Mentors: </b> <?php $mentors=json_decode($Application->mentors); new HTMLString(var_export($mentors), true); ?></p>
-              <p class="card-text"><b>Team members: </b> <?php new HTMLString(var_export($teamMembers), true); ?></p>
-              <p class="card-text"><b>Year: </b> <?php new HTMLString($Application->year, true); ?></p>
-              <p class="card-text"><b>Data: </b> <?php new HTMLString(var_export($Application->data), true); ?></p>
-              <p class="card-text"><b>Videos: </b>
+              <p class="card-text">Nositelj: <?php $teamMembers=json_decode($Application->teamMembers); new HTMLString($teamMembers->carrier->name . ' <'.$teamMembers->carrier->aai.'>', true) ?></p>
+              <p class="card-text">Podaci</p>
+              <p class="card-text"><b>Mentori: </b> <?php $mentors=json_decode($Application->mentors); new HTMLString(var_export($mentors), true); ?></p>
+              <p class="card-text"><b>Članovi: </b> <?php new HTMLString(var_export($teamMembers), true); ?></p>
+              <p class="card-text"><b>Godina: </b> <?php new HTMLString($Application->year, true); ?></p>
+              <p class="card-text"><b>Podaci: </b> <?php new HTMLString(var_export($Application->data), true); ?></p>
+              <p class="card-text"><b>Videi: </b>
               <?php
             $vmssID = $Application->vmssID;
             $requestEndpoint = $config->vmssBaseURL."/video/".$vmssID;

@@ -102,5 +102,27 @@ class User{
         if($Metadata->type == 2) return true;
         return false;
     }
+    public function isJury(){
+        $Metadata = json_decode($this->metadata);
+        if($Metadata->type == 3) return true;
+        return false;
+    }
+
+    public function searchByAAI($PartOfAAI){
+        $query = "SELECT aai FROM users WHERE aai LIKE :aai";
+        $statement = $this->conn->prepare($query);
+        $params['aai'] = '%'.$PartOfAAI.'%';
+        $statement->execute($params);
+        $res = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $Users = [];
+
+        foreach($res as $row){
+            $User = new User($this->conn);
+            $User->aai = $row['aai'];
+            $User->load();
+            $Users[] = $User;
+        }
+        return $Users;
+    }
 
 }

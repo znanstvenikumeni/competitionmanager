@@ -2,10 +2,13 @@
 class APIRequest{
 	private $conn;
 	private $route;
+	private $config;
 
 	public function __construct(\PDO $pdo, $route) {
         $this->conn = $pdo;
         $this->route = $route;
+        include __DIR__.'/../boot/ConfigBoot.php';
+        $this->config = $config;
     }
 
     public function handle(){
@@ -80,6 +83,30 @@ class APIRequest{
        			$Output = json_encode($Applications);
        			$this->serve($Output, 200);
     			break;
+            case 'getViewableApplications':
+                $ApplicationFactory = new Application($this->conn);
+                $Applications = $ApplicationFactory->fetchAll();
+                foreach($Applications as $key=>&$Application){
+                    if($Application->year > $this->config->lastOrganisationalYearToShowOnPublic) {
+                        unset($Applications[$key]); continue;
+                    }
+                    if($Application->status != 2) {
+                        unset($Applications[$key]); continue;
+                    }
+                    $Application->mentors = json_decode($Application->mentors);
+                    foreach($Application->mentors as &$Mentor){
+                        $Mentor->aai = 'ProtectedValue';
+                    }
+                    $Application->teamMembers = json_decode($Application->teamMembers);
+                    foreach($Application->teamMembers as &$Member){
+                        $Member->aai = 'ProtectedValue';
+                        $Member->age = 'ProtectedValue';
+                        $Member->zsem = 'ProtectedValue';
+                    }
+                }
+                $Output = json_encode($Applications);
+                $this->serve($Output, 200);
+                break;
     		default:
     			$this->sendErrorResponse('Bad Request: Invalid route', 400);
     			break;

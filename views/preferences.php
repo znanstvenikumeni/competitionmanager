@@ -1,66 +1,55 @@
 <?php
 header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
 ?>
-<!doctype html>
 <html lang="hr">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-<script src="https://use.fontawesome.com/f689d206fb.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
+    <script src="https://use.fontawesome.com/f689d206fb.js"></script>
+
+    <link rel="stylesheet" href="/frontend/css/compiled.css" />
+    <link rel="stylesheet" href="/frontend/css/app.css" />
     <link href="https://transloadit.edgly.net/releases/uppy/v1.3.0/uppy.min.css" rel="stylesheet">
 
-    <?php 
-        echo '<style>';
-        include 'css/sb-admin-2.min.css';
-        include 'css/shared.css'; 
-        include 'css/app.css'; 
-        echo '</style>'; 
-    ?>
-    
-    <title>Uređivanje postavki &middot; Znanstvenik u meni!</title>
-  </head>
-  <body id="page-top">
-    <div id="wrapper">
+    <title>Postavke &middot; Znanstvenik u meni</title>
+</head>
+<body class="frontpage">
+<div class="container">
+    <nav>
+        <ul>
+            <li class="navli">
+                <img src="<?php echo $config->logoURL; ?>" class="logo">
+            </li>
+            <li class="navli">
+                <a href="/">&larr; Povratak na prijave</a>
+            </li>
+            <li class="navli">
+                <a href="https://znanstvenikumeni.org">Web natjecanja</a>
+            </li>
+            <li class="navli">
+                <a href="/accounts/signout">
+                    Odjava (<?php new HTMLString($User->firstName.' '.$User->lastName, true); ?>)
+                </a>
 
-
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-        <li class="nav-item">
-        <a class="nav-link" href="/">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Prijave za natjecatelje / Mentorska ploča</span></a>
-      </li>
-      <hr class="sidebar-divider">
-        <li class="nav-item active">
-        <a class="nav-link" href="/preferences">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Postavke</span></a>
-      </li>
-
+            </li>
         </ul>
-   <div id="content-wrapper" class="d-flex flex-column">
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"">
-<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
+    </nav>
+</div>
+
+<div class="container breather">
+    <div class="row">
+        <div class="col-md-4">
 
 
-  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Znanstvenik u meni!</a>
-  <ul class="navbar-nav ml-auto">
-   <div class="topbar-divider d-none d-sm-block"></div>
+            <h1 class="hugetext">Uredi postavke</h1>
 
-            <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="/accounts/signout" id="userDropdown" role="button">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Odjava (<?php new HTMLString($User->firstName.' '.$User->lastName, true); ?>)</span>
-              </a>
 
-    </li>
-  </ul>
-</nav>
-      <div id="content">
-       <div class="container-fluid">
+        </div>
+
+        <div class="col-md-8">
+            <h1 class="morebreathingspace">Korisnički račun</h1>
     <form action="/editPreferences" method="post">
         <input type="hidden" name="csrftoken" value="<?php echo $formtoken; ?>">
         <label for="firstName">Ime</label>
@@ -71,6 +60,16 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         <input type="email" class="form-control" id="email" name="email" value="<?php new HTMLString($User->email, true); ?>">
         <label for="phone">Broj mobitela</label>
         <input type="tel" class="form-control" id="phone" name="phone" value="<?php new HTMLString($User->phone, true); ?>">
+        <small>Promjena broja mobitela tražit će potvrdu.</small>
+        <hr>
+        <h1 class="morebreathingspace">Korisnički račun</h1>
+        <label for="aai">AAI@EduHR identitet</label>
+        <input type="text" class="form-control" id="aai" value="<?php new HTMLString($User->aai, true); ?>" disabled>
+
+        <label for="password">Promjena lozinke</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Unesi novu lozinku ako želiš promijeniti postojeću.">
+        <br><small>Lozinka mora sadržavati minimalno 8 znakova, mora sadržavati barem jedan broj ili posebni znak te ne smije biti laka za pogoditi.</small><br>
+        <hr>
         <button class="btn btn-primary">Spremi promjene</button>
     </form>
 

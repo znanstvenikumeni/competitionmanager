@@ -1,110 +1,159 @@
-<!doctype html>
 <html lang="hr">
 <head>
-	<!-- Required meta tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Natječi se u komunikaciji znanosti. Pokaži što možeš.">
+    <meta name="author" content="Organizacija natjecanja Znanstvenik u meni">
+    <meta name="generator" content="">
+    <title>Prijavljeni radovi · Znanstvenik u meni</title>
 
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        <?php echo file_get_contents('frontend/css/compiled.css'); ?>
+        .thumb{
+            max-width: 100%;
+        }
+        .pace {
+            -webkit-pointer-events: none;
+            pointer-events: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
 
-	<title>Prijavljeni radovi &middot; Znanstvenik u meni</title>
-</head>
-<body>
-	<nav class="navbar navbar-light bg-light card-2">
-		<a class="navbar-brand" href="/public">Znanstvenik u meni!</a>
+        .pace-inactive {
+            display: none;
+        }
 
+        .pace .pace-progress {
+            background: #29d;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            right: 100%;
+            width: 100%;
+            height: 2px;
+        }
 
-	</nav>
-	<div class="app-container">
-		<div class="container">
-			<h2 class="screen-title">Prijavljeni radovi</h2>
-			<p class="subtitle screen-explanation">Radovi su sortirani po redu prijave odozgo prema dolje, s lijeva na desno.</p>
-			<div class="card-columns">
-				<?php
-				 foreach($Applications as $Application){
-					if($Application->selfHide ?? null) continue;
-					if(!$Application->vmssID ?? null) continue;
-					$vmssID = $Application->vmssID;
-					$vmssBase = $config->vmssBaseURL;
-					$requestEndpoint = $vmssBase . "/video/" . $vmssID;
-					$response = file_get_contents($requestEndpoint);
-					$response = json_decode($response);
-					$response->video->data = json_decode($response->video->data);
+        .pace .pace-progress-inner {
+            display: block;
+            position: absolute;
+            right: 0px;
+            width: 100px;
+            height: 100%;
+            box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+            opacity: 1.0;
+            -webkit-transform: rotate(3deg) translate(0px, -4px);
+            -moz-transform: rotate(3deg) translate(0px, -4px);
+            -ms-transform: rotate(3deg) translate(0px, -4px);
+            -o-transform: rotate(3deg) translate(0px, -4px);
+            transform: rotate(3deg) translate(0px, -4px);
+        }
 
-				?>
-					
-						<a href="/public/video/<?php echo $Application->id; ?>" class="text-decoration-none">
-							<div class="card card-1">
-								<img src="<?php echo $vmssBase.'/'.$response->video->data->thumb; ?>" class="card-img-top">
-								<h2 class="card-title"><?php new HTMLString($Application->title, true); ?></h2>
-								<p class="card-content"><?php new HTMLString($Application->description, true); ?></p>
-								<p class="metadata">Nositelj rada: <?php new HTMLString($Application->teamMembers->carrier->name, true); ?>, <?php new HTMLString($Application->teamMembers->carrier->school, true);  ?></p>
-							</div></a>
-						<?php
-					}
-					?>
-				</div>
-			</div>
-		</div>
+        .pace .pace-activity {
+            display: block;
+            position: fixed;
+            z-index: 2000;
+            top: 15px;
+            right: 15px;
+            width: 14px;
+            height: 14px;
+            border: solid 2px transparent;
+            border-top-color: #29d;
+            border-left-color: #29d;
+            border-radius: 10px;
+            -webkit-animation: pace-spinner 400ms linear infinite;
+            -moz-animation: pace-spinner 400ms linear infinite;
+            -ms-animation: pace-spinner 400ms linear infinite;
+            -o-animation: pace-spinner 400ms linear infinite;
+            animation: pace-spinner 400ms linear infinite;
+        }
 
+        @-webkit-keyframes pace-spinner {
+            0% { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+        }
+        @-moz-keyframes pace-spinner {
+            0% { -moz-transform: rotate(0deg); transform: rotate(0deg); }
+            100% { -moz-transform: rotate(360deg); transform: rotate(360deg); }
+        }
+        @-o-keyframes pace-spinner {
+            0% { -o-transform: rotate(0deg); transform: rotate(0deg); }
+            100% { -o-transform: rotate(360deg); transform: rotate(360deg); }
+        }
+        @-ms-keyframes pace-spinner {
+            0% { -ms-transform: rotate(0deg); transform: rotate(0deg); }
+            100% { -ms-transform: rotate(360deg); transform: rotate(360deg); }
+        }
+        @keyframes pace-spinner {
+            0% { transform: rotate(0deg); transform: rotate(0deg); }
+            100% { transform: rotate(360deg); transform: rotate(360deg); }
+        }
 
-		<div class="spacer"><hr></div>
-		<nav class="navbar fixed-bottom navbar-light bg-light card-2">
-			<a class="navbar-link-bottom" href="/public"><i class="material-icons">
-				video_library
-			</i></a>
+    </style>
+<body class="frontpage">
 
-			<a class="navbar-link-bottom" href="https://znanstvenikumeni.org"><i class="material-icons">
-				public
-			</i></a>
-		</nav>
-		<style>
-			.spacer{
-				margin-top: 300px;
-			}
-			a:link, a:visited, a:hover, a:focus{
-				color: #343a40;
-			}
-			.card h2, .card p{
-				padding: 16px;
-			}
-
-			.card-1 {
-				box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-				transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-			}
-
-			.card-1:hover {
-				box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-			}
-
-			.card-2 {
-				box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-			}
-
-			.card-3 {
-				box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-			}
-
-			.card-4 {
-				box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-			}
-
-			.card-5 {
-				box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-			}
-			.col-lg-4:last-of-type{
-				display:none;
-			}
-
-
-		</style>
-		<!-- Optional JavaScript -->
-		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-	</body>
-	</html>
+<div class="container">
+    <div class="navtoggle">
+        <a href="/">
+            <img src="https://znanstvenikumeni.org/wp-content/uploads/2019/05/zum-logo-black-w.png" height="60" alt="Together for Knowledge" class="logo">
+        </a>
+        <div class="navli"><a data-toggle="modal"  data-target="#mobileNav">Izbornik</a></div>
+    </div>
+    <nav class="frontpagenav">
+        <ul class="navul">
+            <li class="navli-img">
+                <a href="/">
+                    <img src="https://znanstvenikumeni.org/wp-content/uploads/2019/05/zum-logo-black-w.png" height="60" alt="Together for Knowledge" class="logo">
+                </a>
+            </li>
+            <li class="navli">
+                <a href="https://znanstvenikumeni.org">&larr; Web stranica natjecanja</a>
+            </li>
+            <li class="navli">
+                <a href="/">Prijavljeni radovi</a>
+            </li>
+            <li class="navli">
+                <a href="/accounts/signin">Prijavi se</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<main class="container">
+    <section class="introduction">
+        <div id="app">
+            <div id="videos">
+                <h1 class="hugetext">Radovi prijavljeni u 2019.</h1>
+                <p>Radovi su poredani od najnovijeg prema najstarijem.</p>
+            </div>
+        </div>
+    </section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/0.7.8/pace.min.js" data-pace-options='{ "ajax": true }' integrity="sha512-t3TewtT7K7yfZo5EbAuiM01BMqlU2+JFbKirm0qCZMhywEbHZWWcPiOq+srWn8PdJ+afwX9am5iqnHmfV9+ITA==" crossorigin="anonymous"></script>
+<script>
+    function fetchVideos(){
+        fetch('/publicAPI/getViewableApplications')
+            .then(response => response.json())
+            .then(data => parseVideos(data));
+    }
+    function parseVideos(data){
+        for(var i in data){
+            parseVideo(data[i]);
+        }
+    }
+    function parseVideo(video){
+        videoHTML = `<div class="row breather" onclick="openVideo(${video.id})"><div class="col-md-4" id="thumb-${video.vmssID}"></div><div class="col-md-8"><h2>${video.title}</h2><p class="description">${video.description}</p></div></div>`;
+       document.getElementById("videos").insertAdjacentHTML("beforeend", videoHTML);
+        fetch('https://vmss.znanstvenikumeni.org/video/'+video.vmssID).then(response=>response.json()).then(data=> {
+            videoData = JSON.parse(data.video.data);
+            console.log(videoData, data);
+            thumb = videoData.thumb;
+            thumbHTML = `<img src="https://vmss.znanstvenikumeni.org/${thumb}" class="thumb">`;
+            document.getElementById('thumb-'+video.vmssID).innerHTML = thumbHTML;
+        });
+    }
+    function openVideo(id){
+        window.open("/public/video/"+id,"_self")
+    }
+    fetchVideos();
+</script>

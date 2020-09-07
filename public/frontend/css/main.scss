@@ -1,0 +1,363 @@
+@use 'variables';
+
+body{
+  font-family: variables.$sansseriffont;
+}
+nav{
+  background-color: variables.$blackBackground;
+  padding-top: 64px;
+  padding-bottom: 64px;
+  padding-left: 0;
+  margin-left: 0;
+  ul{
+    padding-left: 0;
+    margin-left: 0;
+    display: inline-flex;
+    list-style-type: none;
+    align-items: center;
+  }
+  li.navli{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+    a, a:active, a:hover, a:visited, a:focus, a:link{
+      color: variables.$almostWhite;
+      text-decoration: none;
+      background-position-y: -0%;
+      padding-top: 5px;
+      padding-left: 5px;
+      padding-right: 5px;
+      padding-bottom: 5px;
+      background-image: linear-gradient( variables.$blackBackground 50%, variables.$primaryColor 50%);
+      transition: background 500ms ease;
+      background-size: 2px;
+      background-size: auto 175%;
+    }
+    a:hover{
+      background-position-y: 100%;
+
+    }
+  }
+}
+.navul-mini{
+  display: list-item;
+}
+body.frontpage{
+  background-color: variables.$blackBackground;
+  color: variables.$almostWhite;
+}
+.highlight{
+  background: linear-gradient(104deg, rgba(130, 255, 173,0) 0.9%, rgba(130, 255, 173,1.25) 2.4%, rgba(130, 255, 173,0.5) 5.8%, rgba(130, 255, 173,0.1) 93%, rgba(130, 255, 173,0.7) 96%, rgba(130, 255, 1732,0) 98%), linear-gradient(183deg, rgba(130, 255, 173,0) 0%, rgba(130, 255, 173,0.3) 7.9%, rgba(130, 255, 173,0) 15%);
+  padding: 0.6em 13.7px;
+  -webkit-box-decoration-break: clone;
+  margin: 0;
+  border-radius: 7.5px;
+  text-shadow: -12px 12px 9.8px rgba(130, 255, 173,0.7), 21px -18.1px 7.3px rgba(255, 255, 255,1), -18.1px -27.3px 30px rgba(255, 255, 255,1);
+}
+#ptica2{
+  position: relative;
+  bottom: 300px;
+  right: -90px;
+}
+#ptica1{
+  position: relative;
+  top: -280px;
+  right: -200px;
+}
+#ptica3{
+  position: relative;
+  top: -300px;
+  right: -300px;
+}
+#ptica4{
+  position: relative;
+  top: -290px;
+  right: -120px;
+}
+.hugetext{
+  font-size: 5em;
+}
+.shape {
+  background: linear-gradient(45deg, var(--primary) 0%, var(--secondary) 100%);
+  animation: morph 8s ease-in-out infinite;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  transition: all 1s ease-in-out;
+  z-index: 5;
+}
+
+@keyframes morph {
+  0% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    background: linear-gradient(45deg, var(--primary) 0%, var(--secondary) 100%);
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    background: linear-gradient(45deg, var(--third) 0%, var(--secondary) 100%);
+  }
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    background: linear-gradient(45deg, var(--primary) 0%, var(--secondary) 100%);
+  }
+}
+.hand{
+  font-family: variables.$seriffont;
+}
+.leadtext{
+  font-size: 2em;
+}
+.breathingspace{
+  line-height: 1em;
+  margin-bottom: 0.5em;
+}
+.breather{
+  margin-top: 100px;
+}
+.steps, .primary-frontpage {
+  a, a:active, a:hover, a:visited, a:focus, a:link {
+    color: variables.$almostWhite;
+    text-decoration: none;
+    background-position-y: -0%;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    background-image: linear-gradient(rgba(0,0,0,0) 50%, variables.$primaryColor 50%);
+    transition: background 500ms ease;
+    background-size: 2px;
+    background-size: auto 175%;
+  }
+
+  a:hover {
+    background-position-y: 100%;
+
+  }
+}
+.footer-zum {
+  margin-bottom: 100px;
+  a, a:active, a:hover, a:visited, a:focus, a:link {
+    color: variables.$primaryColor;
+    text-decoration: none;
+  }
+  a:hover{
+    text-decoration: underline;
+  }
+}
+.bigbreather{
+  margin-top: 200px;
+}
+.morebreathingspace{
+  margin-top: 32px;
+}
+.imgj {
+  position:relative;
+  display:inline-block;
+}
+.overlay {
+  display:none;
+}
+.navtoggle{
+  display: none;
+}
+div.navli{
+  display: inline-block;
+}
+.navli{
+  a, a:active, a:hover, a:visited, a:focus, a:link {
+    color: variables.$almostWhite;
+    text-decoration: none;
+    background-position-y: -0%;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    background-image: linear-gradient(rgba(0,0,0,0) 50%, variables.$primaryColor 50%);
+    transition: background 500ms ease;
+    background-size: 2px;
+    background-size: auto 175%;
+  }
+  a:hover{
+    background-position-y: 100%;
+
+  }
+}
+.imgj:hover .overlay {
+  width:200px;
+  height:200px;
+  background: rgba(224,113,56, 1);
+  position:absolute;
+  top:0;
+  left: 0;
+  font-size: 128px;
+  display:inline-block;
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  box-sizing:border-box;
+  p{
+    position: relative;
+    top: 0%;
+    left: 35%;
+    font-family: variables.$handfont;
+  }
+
+  /* All other styling - see example */
+
+  img {
+    vertical-align:top; /* Default is baseline, this fixes a common alignment issue */
+  }
+}
+.modal {
+  padding: 0 !important; // override inline padding-right added from js
+  background-color: variables.$blackBackground;
+  color: variables.$almostWhite;
+  a, a:active, a:hover, a:visited, a:focus, a:link{
+    color: variables.$almostWhite;
+    text-decoration: none;
+    background-position-y: -0%;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    background-image: linear-gradient( variables.$blackBackground 50%, variables.$primaryColor 50%);
+    transition: background 500ms ease;
+    background-size: 2px;
+    background-size: auto 175%;
+  }
+  a:hover{
+    background-position-y: 100%;
+
+  }
+}
+.modal{
+  height: 100vh;
+  width: 100vw;
+}
+.modal-dialog{
+  width:  90vw;
+  height: 90vh;
+}
+.modal-content, .modal-body{
+  width:  90vw;
+  height: 90vh;
+}
+.modal .modal-dialog, .modal .modal-content, .modal .modal-body{
+  background-color: variables.$blackBackground;
+  color: variables.$almostWhite;
+}
+.modal-dialog{
+  margin: 32px !important;
+}
+/*
+.modal .modal-dialog {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  background-color: variables.$blackBackground;
+  color: variables.$almostWhite;
+}
+.modal .modal-content {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  background-color: variables.$blackBackground;
+  color: variables.$almostWhite;
+}
+.modal .modal-body {
+  overflow-y: auto;
+  background-color: variables.$blackBackground;
+  color: variables.$almostWhite;
+}
+
+ */
+.primary-frontpage{
+  background-image: url('https://togetherforknowledge.eu/cover.jpg');
+  background-size: cover;
+}
+.hugebox{
+  padding: 2%;
+}
+#shore{
+  max-width: 600px;
+}
+.ptica{
+  max-width: 100px;
+}
+.hugebreathingspace{
+  padding-top: 300px;
+}
+@media(screen and max-width: 600px){
+  #shore{
+    max-width: 80vw;
+  }
+  .shape{
+    max-width: 80vw !important;
+  }
+  .hugetext{
+    font-size: 4em;
+  }
+  .frontpagenav{
+    display: none;
+  }
+  .navtoggle{
+    display:block;
+  }
+}
+/**@media (max-width: 767px) {
+  .modal-fullscreen-xs-down {
+    padding: 0 !important;
+  }
+  .modal-fullscreen-xs-down .modal-dialog {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .modal-fullscreen-xs-down .modal-content {
+    height: auto;
+    min-height: 100%;
+    border: 0 none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 991px) {
+  .modal-fullscreen-sm-down {
+    padding: 0 !important;
+  }
+  .modal-fullscreen-sm-down .modal-dialog {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .modal-fullscreen-sm-down .modal-content {
+    height: auto;
+    min-height: 100%;
+    border: 0 none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 1199px) {
+  .modal-fullscreen-md-down {
+    padding: 0 !important;
+  }
+  .modal-fullscreen-md-down .modal-dialog {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .modal-fullscreen-md-down .modal-content {
+    height: auto;
+    min-height: 100%;
+    border: 0 none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+ */

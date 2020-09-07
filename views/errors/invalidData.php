@@ -327,8 +327,10 @@
     
     <p>
       U prošlom koraku, unijeli ste podatke koji nisu valjani. Vratite se <a href="/">na početak</a> i pokušajte ponovno.<br>
-      Ako mislite da nešto nije u redu, prijavite problem.
-      <br><small>Napomena: ako pritisnete tipku za povratak u pregledniku, obavezno osvježite stranicu.</small>
+      Ako mislite da nešto nije u redu, prijavite problem.<br>
+        <b>U nastavku se nalazi popis pogrešaka.</b>
+        <ol><?php echo $InvalidData; ?></ol>
+        <br><small>Napomena: ako pritisnete tipku za povratak u pregledniku, <b>obavezno osvježite stranicu.</b></small>
     </p>
 
 

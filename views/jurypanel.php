@@ -1,6 +1,4 @@
-<?php
-header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
-?>
+<!doctype html>
 <html lang="hr">
 <head>
     <meta charset="utf-8">
@@ -11,9 +9,9 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
 
     <link rel="stylesheet" href="/frontend/css/compiled.css" />
     <link rel="stylesheet" href="/frontend/css/app.css" />
-    <link href="https://transloadit.edgly.net/releases/uppy/v1.3.0/uppy.min.css" rel="stylesheet">
 
-    <title>Prijavi se &middot; Znanstvenik u meni</title>
+
+    <title>Žiri &middot; Znanstvenik u meni</title>
 </head>
 <body class="frontpage">
 <div class="container">
@@ -37,33 +35,47 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         </ul>
     </nav>
 </div>
-
 <div class="container breather">
     <div class="row">
         <div class="col-md-4">
-
-
-            <h1 class="hugetext">Vaša prijava nije predana</h1>
-
-
+            <h1 class="hugetext" id="pageTitle">Prijavljeni radovi</h1>
         </div>
-
         <div class="col-md-8">
-    <h1 class="morebreathingspace">Uočili smo neke pogreške u vašoj prijavi.</h1>
-    <ul>
-    <?php
-        foreach($errors as $error){
-            echo '<li>'.$error.'</li>';
-        }
-    ?>
-    </ul>
-    <p>Spremili smo vaše promjene u prijavnici kao skicu kako biste lakše mogli popraviti ove probleme.</p>
-    <p><a href="/dashboard">Nastavite uređivati svoju prijavnicu &rarr;</a></p>
-</div>
+            <div id="beginState">
+                <h1 class="morebreathingspace">Svi radovi</h1>
+                <?php foreach($Applications as $Application){
+                    if($Application->status == 1) continue;
+                    $vmssID = $Application->vmssID;
+							$vmssBase = $config->vmssBaseURL;
+							$requestEndpoint = $vmssBase . "/video/" . $vmssID;
+							$response = file_get_contents($requestEndpoint);
+							$response = json_decode($response);
+							$response->video->data = json_decode($response->video->data);
+
+                ?>
+                <div class="application" onclick="openApplication('<?php new HTMLString($Application->id, true); ?>');">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="<?php echo $vmssBase.'/'.$response->video->data->thumb; ?>">
+
+                        </div>
+                        <div class="col-md-8">
+                            <h1><?php new HTMLString($Application->title, true); ?></h1>
+                            <p>Nositelj rada: <?php new HTMLString($Application->teamMembers->carrier->name, true); ?>, <?php new HTMLString($Application->teamMembers->carrier->school, true);  ?></p>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script>
@@ -71,11 +83,15 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
     include 'js/shared.js';
     ?>
 </script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-<script>
-    AOS.init();
-</script>
 
-  </body>
+<style>
+    .application{
+        margin-bottom: 128px;
+    }
+    img{
+        max-width: 200px;
+    }
+</style>
+
+</body>
 </html>

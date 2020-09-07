@@ -4,3 +4,4 @@
  create table sessions  (id bigint(20) primary key auto_increment,user bigint(20), token varchar(1024), time bigint(20), validity bigint(20), useragent varchar(256), ip varchar(256), data longtext) character set = utf8mb4, auto_increment=41110031;
  create table tokens ( id bigint(20) primary key auto_increment, user bigint(20), session bigint(20), token varchar(1024), used int(1), usableOn longtext, data longtext ) character set = utf8mb4, auto_increment=18832871; 
  CREATE TABLE logs (id bigint(20) primary key auto_increment, user bigint(20), session bigint(20), component varchar(256), action varchar(256), result varchar(256), time varchar(256), ip varchar(256),  useragent varchar(256), data longtext) character set = utf8mb4, auto_increment=4555110001;
+ create table phoneNumberVerifications(userID bigint(20), phoneNumber varchar(24), verificationCode varchar(10), timeSent bigint(20), verified boolean);

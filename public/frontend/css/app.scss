@@ -1,0 +1,72 @@
+@use 'variables_cm';
+.logo{
+  max-height: 96px;
+}
+p{
+  a, a:active, a:hover, a:visited, a:focus, a:link{
+    color: variables_cm.$almostWhite;
+    text-decoration: none;
+    background-position-y: -0%;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    background-image: linear-gradient( variables_cm.$blackBackground 50%, variables_cm.$primaryColor 50%);
+    transition: background 500ms ease;
+    background-size: 2px;
+    background-size: auto 175%;
+  }
+  a:hover{
+    background-position-y: 100%;
+
+  }
+}
+input.form-control, textarea.form-control{
+  background-image: linear-gradient( variables_cm.$blackBackground 50%, variables_cm.$primaryColor 50%);
+  border: 0 !important;
+  color: variables_cm.$almostWhite;
+  transition: background 500ms ease;
+  background-size: 2px;
+  background-size: auto 200%;
+  background-position-y: 10%;
+  margin-bottom: 24px;
+}
+input.form-control:active, input.form-control:focus, textarea:active, textarea:focus{
+  background-position-y: 100%;
+  box-shadow: none;
+  color: variables_cm.$almostWhite !important;
+}
+
+input.is-invalid:active, input.is-invalid:focus{
+  background-position: center right calc(.375em + .1875rem);
+  background-color: variables_cm.$primaryColor !important;
+}
+label{
+  font-weight: bolder;
+  padding-top: 24px;
+  padding-bottom: 8px;
+}
+.btn-primary{
+  background: linear-gradient(#170B06 50%, #e07138 50%);
+  border: 0;
+  color: variables_cm.$almostWhite;
+  transition: background 500ms ease;
+  background-size: 2px;
+  background-size: auto 200%;
+  background-position-y: 10%;
+}
+.btn{
+  margin-bottom: 24px;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active{
+  background-position-y: 100%;
+  box-shadow: none;
+  color: #fff;
+}
+.form-control:disabled, .form-control[readonly]{
+  background-image: linear-gradient( variables_cm.$blackBackground 50%, variables_cm.$warningColor 50%);
+
+}
+.bg-dark{
+  background-color: variables_cm.$blackBackground !important;
+}

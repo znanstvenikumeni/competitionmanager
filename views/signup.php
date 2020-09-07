@@ -5,26 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <?php 
-        echo '<style>';
-        include 'css/shared.css'; 
-        include 'css/flows.css'; 
-        echo '</style>'; 
-    ?>
+      <link rel="stylesheet" href="/frontend/css/compiled.css" />
+      <link rel="stylesheet" href="/frontend/css/app.css" />
     
 
     <title>Otvori korisnički račun &middot; Znanstvenik u meni!</title>
   </head>
-  <body class="text-center">
+  <body class="frontpage">
 
-    <div class="flow-container">
-        <img src="<?php echo $config->logoURL; ?>" class="logo">
-        <h1>Bok.</h1>
-        <p class="lead">Registracija</p>
-        <p>Za prijavu na natjecanje Znanstvenik u meni natjecatelji i mentori moraju otvoriti korisnički račun.</p>
+    <div class="container breather">
+        <div class="row">
+            <div class="col-md-8">
+                <img src="<?php echo $config->logoURL; ?>" class="logo">
+                <h1 class="hugetext">Registriraj se</h1>
+                <p>Za prijavu na natjecanje Znanstvenik u meni natjecatelji i mentori moraju otvoriti korisnički račun.</p>
+                <p>Već imaš korisnički račun? <a href="/accounts/signin">Prijavi se</a></p>
+            </div>
+        <div class="col-md-4">
+
         <form action="/addUser" method="post" id="signup">
             <input type="hidden" name="csrftoken" value="<?php echo $formtoken; ?>">
-            <div class="stepOne">
+            <div class="stepOne" data-aos="fade-up">
             <label for="aai">AAI@EduHR email adresa na @skole.hr domeni</label>
             <input type="email" name="aai" id="aai" class="form-control" placeholder="npr. ivana.horvat@skole.hr">
             <p>Tražit ćemo potvrdu ove adrese.</p>
@@ -35,7 +36,7 @@
             </div>
             <a class="btn btn-primary" id="aaiValidator" onclick="validateAAI()">Nastavi &rarr;</a>
             </div>
-            <div class="stepTwo" style="display:none;">
+            <div class="stepTwo" style="display:none;"  data-aos="fade-up">
             <label for="email">Email adresa za kontakt</label>
             <input type="email" name="email" id="email" class="form-control" placeholder="npr. ivana.horvat@gmail.com" required>
             <label for="phone">Broj mobitela za kontakt</label>
@@ -46,7 +47,7 @@
             </div>
             <a class="btn btn-primary" id="continuePersonal" onclick="continueToPersonal()">Nastavi &rarr;</a>
             </div>
-        <div class="stepThree" style="display:none;">
+        <div class="stepThree" style="display:none;"  data-aos="fade-up">
             <label for="firstName">Ime</label>
             <input type="text" name="firstName" id="firstName" class="form-control" placeholder="npr. Ivana" required>
             <label for="lastName">Prezime</label>
@@ -67,6 +68,8 @@
 
         </div>
         </form>
+        </div>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

@@ -50,33 +50,7 @@ switch($route[0]){
 	        }
     	}
     	if(!isset($route[1])){
-    		$ApplicationFactory = new Application($pdo);
-       			$Applications = $ApplicationFactory->byMentor('');
-       			foreach($Applications as &$Application){
-       			    if($Application->year > $config->lastOrganisationalYearToShowOnPublic) {
-       			        $Application = NULL;
-       			        $Application->selfHide = true;
-                    }
-       				$Application->mentors = json_decode($Application->mentors);
-       				foreach($Application->mentors as &$Mentor){
-       					$Mentor->aai = 'ProtectedValue';
-       				}
-       				$Application->teamMembers = json_decode($Application->teamMembers);
-       				foreach($Application->teamMembers as &$Member){
-                        if ($Application->year > $config->lastOrganisationalYearToShowOnPublic) {
-                            $Application = NULL;
-                            $Application->selfHide = true;
-                        }
-                        $MemberAAI = $Member->aai;
-       					$MemberUser = new User($pdo);
-       					$MemberUser->aai = $MemberAAI;
-       					$MemberUser->load();
-       					$Member->name = $MemberUser->firstName.' '.$MemberUser->lastName;
-       					$Member->aai = 'ProtectedValue';
-       					$Member->age = 'ProtectedValue';
-       					$Member->zsem = 'ProtectedValue';
-       				}
-       			}
+
        			include '../views/public.php';
     	}
     	if(isset($route[1])){
@@ -157,7 +131,26 @@ switch($route[0]){
         $EndpointURL = file_get_contents($config->vmssAuthEndpoint);
         var_dump($config->vmssBaseURL.$EndpointURL);
     break;
-
+    case 'jurypanel':
+        $Session = new Session($pdo);
+        $Session->token = $_COOKIE['cmsession'];
+        if(!$Session->verify()){
+            new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+            header('Location: /accounts/signin');
+            die();
+        }
+        $User = new User($pdo);
+        $User->id = $Session->user;
+        $User->load();
+        if(!$User->isJury()){
+            new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+            header('Location: /accounts/signin');
+            die();
+        }
+        $ApplicationFactory = new Application($pdo);
+        $Applications = $ApplicationFactory->byYear($config->organisationalYear);
+        include '../views/jurypanel.php';
+        break;
     case 'dashboard':
         $Session = new Session($pdo);
         $Session->token = $_COOKIE['cmsession'];
@@ -169,11 +162,15 @@ switch($route[0]){
         $User = new User($pdo);
         $User->id = $Session->user;
         $User->load();
+        $PhoneNumberVerification = new PhoneNumberVerification($pdo);
+        $PhoneVerified = $PhoneNumberVerification->isVerified($User->id, $User->phone);
+        if(!$PhoneVerified){
+            header('Location: /phoneroadblock/verify');
+        }
         if($User->isMentor()){
             header('Location: /mentorpanel');
             die();
         }
-
         $Application = new Application($pdo);
         $Applications = $Application->byUser($Session->user);
         if(count($Applications) == 0){
@@ -184,6 +181,117 @@ switch($route[0]){
         
         include '../views/dashboard.php';
     break;
+    case 'pdfupload':
+        $Session = new Session($pdo);
+        $Session->token = $_COOKIE['cmsession'];
+        if(!$Session->verify()){
+            new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+            header('Location: /accounts/signin');
+            die();
+        }
+        $files = $_FILES['files'];
+        if($files['error'][0]){
+            http_response_code(400);
+            throw new Exception('FailedUploadException: '.$files['error'][0]);
+        }
+        $file_path = $files['tmp_name'][0];
+        $file_name = $_POST['name'];
+        $originals['name'] = $_POST['name'];
+        $fileNaming = explode('.', $file_name);
+        $fileExtension = $fileNaming[array_key_last($fileNaming)];
+        if($fileExtension != 'pdf'){
+            http_response_code(400);
+            throw new Exception('Filetype not allowed');
+        }
+        $file_name = bin2hex(openssl_random_pseudo_bytes(32)).md5($file_name);
+        if(move_uploaded_file($file_path, __DIR__.'/../../public/cdn/' . basename($file_name).'.pdf')){
+            $response['upload'] = 'success';
+            $response['filename'] = $file_name;
+            echo json_encode($response);
+        }
+        else{
+            http_response_code(400);
+            throw new Exception('FailedUploadProcessingException');
+        }
+        break;
+    case 'phoneroadblock':
+        if($route[1] == 'verify'){
+            $Session = new Session($pdo);
+            $Session->token = $_COOKIE['cmsession'];
+            if(!$Session->verify()){
+                new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+                header('Location: /accounts/signin');
+                die();
+            }
+            $User = new User($pdo);
+            $User->id = $Session->user;
+            $User->load();
+
+            $PhoneNumberVerification = new PhoneNumberVerification($pdo);
+            $PhoneVerified = $PhoneNumberVerification->isVerified($User->id, $User->phone);
+            if($PhoneVerified){
+                header('Location: /dashboard');
+            }
+            $Phone = $PhoneNumberVerification->formatNumber($User->phone);
+            include '../views/roadblock-verify.php';
+        }
+        if($route[1] == 'request'){
+            $Session = new Session($pdo);
+            $Session->token = $_COOKIE['cmsession'];
+            if(!$Session->verify()){
+                new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+                header('Location: /accounts/signin');
+                die();
+            }
+            $User = new User($pdo);
+            $User->id = $Session->user;
+            $User->load();
+
+            $PhoneNumberVerification = new PhoneNumberVerification($pdo);
+            $PhoneVerified = $PhoneNumberVerification->isVerified($User->id, $User->phone);
+            if($PhoneVerified){
+                header('Location: /dashboard');
+            }
+            if($route[2] == 'invalid'){
+                $Message = '<b>Nevaljan kod. Pokušaj ponovno.</b>';
+            }
+            else{
+                $Message = '';
+            }
+            $Phone = $PhoneNumberVerification->formatNumber($User->phone);
+            if($PhoneNumberVerification->canSend($User->id, $User->phone)){
+                $PhoneNumberVerification->passTwilio($Twilio);
+                $PhoneNumberVerification->setVerificationRequest($User->phone);
+            }
+            include '../views/roadblock-validate.php';
+        }
+        if($route[1] == 'check'){
+            $Session = new Session($pdo);
+            $Session->token = $_COOKIE['cmsession'];
+            if(!$Session->verify()){
+                new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed',null, $Session->user, $_COOKIE['cmsession']);
+                header('Location: /accounts/signin');
+                die();
+            }
+            $User = new User($pdo);
+            $User->id = $Session->user;
+            $User->load();
+
+            $PhoneNumberVerification = new PhoneNumberVerification($pdo);
+            $PhoneVerified = $PhoneNumberVerification->isVerified($User->id, $User->phone);
+            if($PhoneVerified){
+                header('Location: /dashboard');
+            }
+            $Phone = $PhoneNumberVerification->formatNumber($User->phone);
+            $Result = $PhoneNumberVerification->validateVerificationRequest($User->phone, $_POST['code']);
+            if($Result == true){
+                header('Location: /dashboard');
+            }
+            else{
+                header('Location: /phoneroadblock/request/invalid');
+            }
+        }
+        break;
     case 'mentorpanel':
         $Session = new Session($pdo);
         $Session->token = $_COOKIE['cmsession'];
@@ -200,6 +308,11 @@ switch($route[0]){
         $Applications2 = $Application->byMentor($User->aai);
         $Applications = array_merge($Applications, $Applications2);
         unset($Applications2);
+        $PhoneNumberVerification = new PhoneNumberVerification($pdo);
+        $PhoneVerified = $PhoneNumberVerification->isVerified($User->id, $User->phone);
+        if(!$PhoneVerified){
+            header('Location: /phoneroadblock/verify');
+        }
         include '../views/mentorpanel.php';
     break;
     case 'organiserpanel':
@@ -228,6 +341,10 @@ switch($route[0]){
         else{
             if($route[1] == 'users'){
                 include '../views/usermanager.php';
+            }
+            if($route[1] == 'user'){
+                $Users = $User->searchByAAI($_POST['aai']);
+                include '../views/user.php';
             }
         }
     break;
@@ -340,6 +457,52 @@ switch($route[0]){
         $User->lastName = $_POST['lastName'];
         $User->email = $_POST['email'];
         $User->phone = $_POST['phone'];
+        if(isset($_POST['password'])){
+            $User->password = $_POST['password'];
+            if(strlen($User->password) < 8){
+                $InvalidData .= '<li>Lozinka mora imati 8 ili više znakova.</li>';
+                try {
+                    throw new Exception('Invalid data entered');
+                }
+                catch (Exception $ex){
+                    $bugsnag->notifyException($ex);
+                }
+            }
+            if(!preg_match("/[^a-zA-Z]{1,}/", $User->password)){
+                $InvalidData .= '<li>Lozinka mora sadržavati barem jednu znamenku ili posebni znak.</li>';
+                try {
+                    throw new Exception('Invalid data entered');
+                }
+                catch (Exception $ex){
+                    $bugsnag->notifyException($ex);
+                }
+            }
+            $blacklist = file_get_contents('../passwordsBlacklist.txt');
+            $blacklist = explode("\r\n", $blacklist);
+
+            $blacklisted = false;
+            $flipped_haystack = array_flip($blacklist);
+            if ( isset($flipped_haystack[$User->password]) ){
+                $blacklisted = true;
+            }
+            if($blacklisted){
+                $InvalidData .= '<li>Lozinka ne smije biti lagana za pogoditi.</li>';
+                try {
+                    throw new Exception('Invalid data entered - password too common');
+                }
+                catch (Exception $ex){
+                    $bugsnag->notifyException($ex);
+                }
+            }
+            if($InvalidData) {
+                include __DIR__.'/../../views/errors/invalidData.php';
+                die();
+            }
+            else{
+                $User->passwordHash = password_hash($_POST['password'], PASSWORD_ARGON2ID);
+                $User->password = $User->passwordHash;
+            }
+        }
         $User->save();
         header('Location: /');
     break;
@@ -357,10 +520,15 @@ switch($route[0]){
         }
         $Token2->used();
         $User->aai = $_POST['aai'];
+        $InvalidData = '';
         if(stripos($User->aai, '@skole.hr') === FALSE){
-            include '../views/errors/invalidData.php';
-            throw new Exception('Invalid data entered');
-            die();
+            $InvalidData .= '<li>AAI identitet mora završavati na @skole.hr</li>';
+            try {
+                throw new Exception('Invalid data entered');
+            }
+            catch (Exception $ex){
+                $bugsnag->notifyException($ex);
+            }
         }
         if(stripos($User->aai, $config->adminDomain) !== FALSE){
         	throw new Exception('Attack vector detected');
@@ -368,14 +536,22 @@ switch($route[0]){
         }
         $User->password = $_POST['password']; // it gets hashed in User.php and doesn't get saved in plaintext, don't worry
         if(strlen($User->password) < 8){
-            include '../views/errors/invalidData.php';
-            throw new Exception('Invalid data entered');
-            die();
+            $InvalidData .= '<li>Lozinka mora imati 8 ili više znakova.</li>';
+            try {
+               throw new Exception('Invalid data entered');
+            }
+            catch (Exception $ex){
+                $bugsnag->notifyException($ex);
+            }
         }
         if(!preg_match("/[^a-zA-Z]{1,}/", $User->password)){
-            include '../views/errors/invalidData.php';
-            throw new Exception('Invalid data entered');
-            die();
+            $InvalidData .= '<li>Lozinka mora sadržavati barem jednu znamenku ili posebni znak.</li>';
+            try {
+                throw new Exception('Invalid data entered');
+            }
+            catch (Exception $ex){
+                $bugsnag->notifyException($ex);
+            }
         }
         $blacklist = file_get_contents('../passwordsBlacklist.txt');
         $blacklist = explode("\r\n", $blacklist);
@@ -386,8 +562,16 @@ switch($route[0]){
             $blacklisted = true;
         } 
         if($blacklisted){
-            include '../views/errors/invalidData.php';
-            throw new Exception('Invalid data entered - password too common');
+            $InvalidData .= '<li>Lozinka ne smije biti lagana za pogoditi.</li>';
+            try {
+                throw new Exception('Invalid data entered - password too common');
+            }
+            catch (Exception $ex){
+                $bugsnag->notifyException($ex);
+            }
+        }
+        if($InvalidData) {
+            include __DIR__.'/../../views/errors/invalidData.php';
             die();
         }
         $User->firstName = $_POST['firstName'];
@@ -568,7 +752,10 @@ switch($route[0]){
         $Mentors = json_encode($Mentors);
         $Year = $config->organisationalYear;
         $Data['category'] = $_POST['category'];
+        $Category = $Data['category'];
         $CategoryValid = (bool)$_POST['category'];
+        $Data['pdf'] = $_POST['pdfid'];
+        $Application->pdf = $Data['pdf'];
         $Data = json_encode($Data);
         $Application->mentors = $Mentors;
         $Application->teamMembers = $TeamMembers;
@@ -602,6 +789,9 @@ switch($route[0]){
             }
             if(!$MentorsValid){
                 $errors[] = 'Netko od mentora rada nema otvoren korisnički račun, što je obavezno';
+            }
+            if($Category == 'originalresearch' && !$Application->pdf){
+                $errors[] = "Natječete se u kategoriji originalnih istraživačkih radova, stoga nedostaje PDF vašeg rada.";
             }
             if(count($errors)){
                 $status = 1;
@@ -733,6 +923,7 @@ switch($route[0]){
         $Application->status = 1;
         $Application->year = $config->organisationalYear;
         $Data['category'] = $_POST['category'];
+        $Data['pdf'] = $_POST['pdfid'];
         $Application->data = json_encode($Data);
         $Application->save();
         header('Location: /dashboard');

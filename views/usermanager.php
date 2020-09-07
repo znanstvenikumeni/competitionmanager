@@ -12,14 +12,14 @@
         echo '</style>'; 
     ?>
     
-    <title>Organiser panel &middot; Znanstvenik u meni!</title>
+    <title>Organizatorska ploča &middot; Znanstvenik u meni!</title>
   </head>
   <body>
 <nav class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Znanstvenik u meni! * Together for Knowledge</a>
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Znanstvenik u meni</a>
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
-      <a class="nav-link" href="/accounts/signout">Sign out (<?php new HTMLString($User->firstName.' '.$User->lastName, true); ?>)</a>
+      <a class="nav-link" href="/accounts/signout">Odjava (<?php new HTMLString($User->firstName.' '.$User->lastName, true); ?>)</a>
     </li>
   </ul>
 </nav>
@@ -30,20 +30,20 @@
     <div class="col-2 sidebar">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link" href="/organiserpanel">Organiser panel</a>
+            <a class="nav-link" href="/organiserpanel">Organizatorska ploča</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/organiserpanel/users">User management</a>
+            <a class="nav-link" href="/organiserpanel/users">Korisnici</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/preferences">Preferences</a>
+            <a class="nav-link" href="/preferences">Postavke</a>
           </li>
         </ul>
       </div>
       <div class="col-10 main">
         <form action="/organiserpanel/user" method="post">
-          <input type="email" name="aai" placeholder="Enter a part of the user's AAI" class="form-control">
-          <input type="submit" class="btn btn-primary" value="Search"> 
+          <input type="text" name="aai" placeholder="Dio AAI-ja korisnika" class="form-control">
+          <input type="submit" class="btn btn-primary" value="Traži">
       </div>
     </div>
     

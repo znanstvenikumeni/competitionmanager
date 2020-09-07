@@ -11,6 +11,7 @@ class Application{
     public $status;
     public $year;
     public $data;
+    public $pdf;
 
     public function __construct(\PDO $pdo) {
         $this->conn = $pdo;
@@ -51,6 +52,39 @@ class Application{
         
         return $Applications;
     }
+    public function fetchAll(){
+        $query = "SELECT * FROM applications ORDER BY id DESC";
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params);
+        $application = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $Applications = [];
+        foreach($application as $row){
+            $App = new Application($this->conn);
+            foreach($row as $key=>$value){
+                $App->$key = $value;
+            }
+            array_push($Applications, $App);
+        }
+
+        return $Applications;
+    }
+    public function byYear($year){
+        $query = "SELECT * FROM applications WHERE year = :year";
+        $params['year'] = $year;
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params);
+        $application = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $Applications = [];
+        foreach($application as $row){
+            $App = new Application($this->conn);
+            foreach($row as $key=>$value){
+                $App->$key = $value;
+            }
+            array_push($Applications, $App);
+        }
+
+        return $Applications;
+    }
 
 
     private function prepareData(){
@@ -65,6 +99,7 @@ class Application{
         $params['status'] = $this->status;
         $params['year'] = $this->year;
         $params['data'] = $this->data;
+        $this->pdf = $this->data['pdf'];
         return $params;
     }
 
@@ -105,5 +140,7 @@ class Application{
         foreach($assoc as $key=>$value){
             $this->$key = $value;
         }
+        $this->data = json_decode($this->data);
+        $this->pdf = $this->data->pdf;
     }
 }
