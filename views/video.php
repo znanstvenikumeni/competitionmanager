@@ -47,6 +47,7 @@
     <section class="introduction">
         <div id="app">
             <?php
+
             $vmssID = $Application->vmssID;
             $vmssBase = $config->vmssBaseURL;
             $requestEndpoint = $vmssBase . "/video/" . $vmssID;
