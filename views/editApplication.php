@@ -96,9 +96,13 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             echo '<br><br>Prije zamjene PDF-a, spremite promjene.';
             echo '</div>';
         }
-        else echo '<label for="pdfupload-area" class="pdf" style="display:none;">PDF rada</label>
-        <div id="pdfupload-area" class="pdf" style="display:none;"></div>
+        else {
+            if($Application->pdf) $stylePDF = 'style="display:none;"';
+            else $stylePDF = '';
+            echo '<label for="pdfupload-area" '.$stylePDF.' class="pdf" >PDF rada</label>
+        <div id="pdfupload-area" class="pdf" '.$stylePDF.'></div>
         <hr>';
+        }
         ?>
         <a class="btn btn-primary" role="button" onclick="continueToContestantDataInNewApplication()">Nastavi na natjecatelje &rarr;</a>
     </div>
@@ -184,7 +188,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         <label for="nameMentor1">Ime i prezime prvog mentora</label>
         <input type="text" id="nameMentor1" name="nameMentor1" class="form-control" disabled  placeholder="Popunit će se automatski kad uneseš AAI."  value="<?php if($Mentor1->firstName ?? '') new HTMLString($Mentor1->firstName.' '.$Mentor1->lastName, true); ?>">
         <label for="aaiMentor1">AAI prvog mentora</label>
-        <input type="text" name="aaiMentor1" id="aaiMentor1" class="form-control" onkeyup="aai('Mentor1')"  value="<?php new HTMLString($MentorData->first->aai, true); ?>">
+        <input type="text" name="aaiMentor1" id="aaiMentor1" class="form-control" onkeyup="aai('Mentor1')" value="<?php new HTMLString($MentorData->first->aai, true); ?>">
         <div id="aaiHelpMentor1" style="display:none;">
             <div class="alert alert-warning"><b>Poslat ćemo email na <span id="aaiDataMentor1"></span></b> i pozvati tvog mentora da se pridruži ovoj prijavi.</div>  
         </div>

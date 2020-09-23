@@ -21,6 +21,7 @@
                 <?php if(isset($msg)) echo $msg; ?>
                 <p>Za nastavak, potrebna je prijava u korisnički račun.</p>
                 <p><b>Nemaš korisnički račun?</b> <a href="/accounts/new">Registriraj se</a></p>
+                <p><b>Ne sjećaš se lozinke?</b> <a href="/accounts/recover">Postavi novu lozinku</a></p>
             </div>
         <div class="col-md-4">
 

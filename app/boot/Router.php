@@ -381,6 +381,11 @@ switch($route[0]){
             $Session->setCookie();
             header('Location: /');
         }
+    elseif($route[1] == 'recover') {
+        $Token = new Token($pdo, null, null, null, 'submitPasswordResetRequest');
+        $formtoken = $Token->get();
+        include '../views/recover.php';
+    }
     break;
     case 'addSession':
         $User = new User($pdo);
@@ -398,12 +403,12 @@ switch($route[0]){
         $User->aai = $_POST['aai'];
         $User->load();
         if($User->password == null){
-            new LogEntry($pdo, 'AccountSecurity/LoginFail/AccountDoesntExist', 'addSession', 'failed',null, $_POST['aai'], null);
+            new LogEntry($pdo, 'AccountSecurity/LoginFail/AccountDoesntExist', 'addSession', 'failed', $_POST['aai'], null, null);
             header('Location: /accounts/signin/error');
             die();
         }
         if(!(password_verify($_POST['password'], $User->password))){
-            new LogEntry($pdo, 'AccountSecurity/LoginFail/WrongPassword', 'addSession', 'failed',null, $_POST['aai'], null);
+            new LogEntry($pdo, 'AccountSecurity/LoginFail/WrongPassword', 'addSession', 'failed',null, $User->id, null);
             header('Location: /accounts/signin/error');
             die();
         }
@@ -414,6 +419,127 @@ switch($route[0]){
         $Session->setCookie();
         header('Location: /dashboard');
     break;
+    case 'submitPasswordResetRequest':
+        $User = new User($pdo);
+        $Token2 = new Token($pdo, $_POST['csrftoken']);
+        $Token2->load();
+        if($Token2->used){
+            new LogEntry($pdo, 'TokenSecurity/TokenIdempotency', 'submitPasswordResetRequest', 'failed',null, null, null);
+            throw new Exception('CSRF validation failed');
+        }
+        if($Token2->usableOn != 'submitPasswordResetRequest'){
+            new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'submitPasswordResetRequest', 'failed',null, null, null);
+            throw new Exception('CSRF validation failed');
+        }
+        $Token2->used();
+        $User->aai = $_POST['aai'];
+        $User->load();
+        if($User->email ?? ''){
+            $ResetTokenFactory = new Token($pdo,null, $User->id,null,'passwordReset');
+            $ResetTokenFactory->data = time();
+            $ResetToken = $ResetTokenFactory->get();
+            $sendResult = $Postmark->sendEmailWithTemplate(
+                $config->defaultEmail,
+                $User->email,
+                $config->postmarkResetTemplate,
+                [
+                    "action_url" => $config->resetURL.'/'.$ResetToken
+                ]);
+
+        }
+        include '../views/resetRequested.php';
+        break;
+    case 'reset':
+        if(!isset($route[1])) throw new Exception('No token set');
+        $User = new User($pdo);
+        $Token2 = new Token($pdo, $route[1]);
+        $Token2->load();
+        if($Token2->used){
+            new LogEntry($pdo, 'TokenSecurity/TokenIdempotency', 'passwordReset', 'failed',null, $User->id, null);
+            throw new Exception('CSRF validation failed');
+        }
+        if($Token2->usableOn != 'passwordReset'){
+            new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'passwordReset', 'failed',null, $User->id, null);
+            throw new Exception('CSRF validation failed');
+        }
+        if($Token2->data < strtotime('-45 minutes')){
+            new LogEntry($pdo, 'TokenSecurity/PasswordResetDuration', 'passwordReset', 'failed',null, $User->id, null);
+            throw new Exception('CSRF validation failed');
+        }
+        $Token2->used();
+        $User->id = $Token2->user;
+        $User->load();
+        $ResetTokenFactory = new Token($pdo,null, $User->id,null,'passwordChange');
+        $ResetTokenFactory->data = time();
+        $ResetToken = $ResetTokenFactory->get();
+        include '../views/setpassword.php';
+        break;
+    case 'passwordChange':
+        $User = new User($pdo);
+        $Token2 = new Token($pdo, $_POST['csrftoken']);
+        $Token2->load();
+        if($Token2->used){
+            new LogEntry($pdo, 'TokenSecurity/TokenIdempotency', 'passwordChange', 'failed',null, $User->id, null);
+            throw new Exception('CSRF validation failed');
+        }
+        if($Token2->usableOn != 'passwordChange'){
+            new LogEntry($pdo, 'TokenSecurity/TokenSpecificValidity', 'passwordChange', 'failed',null, $User->id, null);
+            throw new Exception('CSRF validation failed');
+        }
+        if($Token2->data < strtotime('-45 minutes')){
+            new LogEntry($pdo, 'TokenSecurity/PasswordResetDuration', 'passwordChange', 'failed',null, $User->id, null);
+            throw new Exception('CSRF validation failed');
+        }
+        $Token2->used();
+        $User->id = $Token2->user;
+        $User->load();
+        $User->password = $_POST['password'];
+        if(strlen($User->password) < 8){
+            $InvalidData .= '<li>Lozinka mora imati 8 ili više znakova.</li>';
+            try {
+                throw new Exception('Invalid data entered');
+            }
+            catch (Exception $ex){
+                $bugsnag->notifyException($ex);
+            }
+        }
+        if(!preg_match("/[^a-zA-Z]{1,}/", $User->password)){
+            $InvalidData .= '<li>Lozinka mora sadržavati barem jednu znamenku ili posebni znak.</li>';
+            try {
+                throw new Exception('Invalid data entered');
+            }
+            catch (Exception $ex){
+                $bugsnag->notifyException($ex);
+            }
+        }
+        $blacklist = file_get_contents('../passwordsBlacklist.txt');
+        $blacklist = explode("\r\n", $blacklist);
+
+        $blacklisted = false;
+        $flipped_haystack = array_flip($blacklist);
+        if ( isset($flipped_haystack[$User->password]) ){
+            $blacklisted = true;
+        }
+        if($blacklisted){
+            $InvalidData .= '<li>Lozinka ne smije biti lagana za pogoditi.</li>';
+            try {
+                throw new Exception('Invalid data entered - password too common');
+            }
+            catch (Exception $ex){
+                $bugsnag->notifyException($ex);
+            }
+        }
+        if($InvalidData) {
+            include __DIR__.'/../../views/errors/invalidData.php';
+            die();
+        }
+        else{
+            $User->passwordHash = password_hash($_POST['password'], PASSWORD_ARGON2ID);
+            $User->password = $User->passwordHash;
+            $User->save();
+        }
+        header('Location: /accounts/signin');
+        break;
     case 'preferences':
         $Session = new Session($pdo);
         $Session->token = $_COOKIE['cmsession'];

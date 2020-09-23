@@ -21,6 +21,8 @@ class LogEntry{
         $this->action = $action;
         $this->result = $result;
         $this->data = $data;
+        $this->user = $user;
+        $this->session = $session;
         $this->save();
     }
 
