@@ -1,20 +1,20 @@
-<!doctype html>
 <html lang="hr">
-  <head>
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Natječi se u komunikaciji znanosti. Pokaži što možeš.">
+    <meta name="author" content="Organizacija natjecanja Znanstvenik u meni">
+    <meta name="generator" content="">
+    <title>Prijavljeni radovi · Znanstvenik u meni</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <?php 
-        echo '<style>';
-        include 'css/shared.css'; 
-        include 'css/app.css'; 
-        echo '</style>'; 
-    ?>
-    
-    <title>Organiser panel &middot; Znanstvenik u meni!</title>
-  </head>
-  <body>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <style>
+        <?php echo file_get_contents('frontend/css/compiled.css'); ?>
+
+    </style>
+<body class="frontpage">
+
 <nav class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow">
   <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Znanstvenik u meni</a>
   <ul class="navbar-nav px-3">
@@ -47,9 +47,9 @@
         array_reverse($Applications);
           foreach($Applications as $Application){
           ?>
-          <div class="card">
+          <div class="card bg-dark">
             <div class="card-header">
-              Applications
+              Prijava
             </div>
             <div class="card-body">
               <h5 class="card-title"><?php new HTMLString($Application->title, true); ?></h5>
@@ -66,9 +66,14 @@
             $requestEndpoint = $config->vmssBaseURL."/video/".$vmssID;
             $response = file_get_contents($requestEndpoint);
             $response = json_decode($response);
+            $response->video->files = json_decode($response->video->files);
+            $videoLink = $response->video->files->mp4->{'1080p'};
+            $Application->data = json_decode($Application->data);
             new HTMLString(var_export($response));
             ?>
+                  <br><br><b><a href="<?php echo $config->vmssBaseURL; echo '/'; new HTMLString($videoLink, true); ?>">Klikni da pogledaš video</a></b>
             </p>
+                <p class="card-text"><a href="/cdn/<?php new HTMLString($Application->data->pdf, true); ?>.pdf">PDF rada (ako je dostupan)</a></p>
               <p class="card-text">
               <?php if($Application->status == 1){
               ?>

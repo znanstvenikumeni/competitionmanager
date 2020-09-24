@@ -125,11 +125,17 @@
                 }
                 ?>
             </ul>
-            <p>Godina prijave: <?php new HTMLString($Application->year, true); ?> &middot; Oznaka kategorije: <?php  new HTMLString($Application->data->category, true); ?></p>
+            <p>Godina prijave: <?php new HTMLString($Application->year, true); ?> &middot; Oznaka kategorije: <?php  new HTMLString($Application->data->category, true); ?>
+            <?php if($Application->data->category == 'originalresearch'){
+                ?>
+                &middot; <a href="/<?php new HTMLString($Application->data->pdf, true); ?>.pdf">PDF rada</a>
+            <?php
+            }
+            ?>
+            </p>
         </div>
         </div>
         <br><br><br><br>
-
         <style>
 
         </style>
