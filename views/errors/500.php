@@ -317,23 +317,23 @@
     
 <div class="content-container shadow">
 	<div class="head-line secondary-text-color">
-		503
+		500
 	</div>
 	<div class="subheader primary-text-color">
-		Čini se da imamo tehničkih poteškoća.
+		Nešto nije u redu.
 	</div>
 	<div class="hr"></div>
   <div class="context secondary-text-color">
     
     <p>
-      Vratite se na prethodnu stranicu i pokušajte ponovno.
-      Ako mislite da nešto nije u redu, prijavite problem.
+      <b>Dogodila se neočekivana pogreška.</b> Možda imamo tehničkih poteškoća, a možda nešto nije bilo u redu s prethodnim zahtjevom. <br><br>
+        <a href="/">Kliknite ovdje</a>
     </p>
 
 
   </div>
 	<div class="buttons-container single-button">
-		<a class="button" href="mailto:mbm@educateam" target="_blank"><span class="fa fa-warning"></span> Prijavite problem</a>
+		<a class="button" href="mailto:natjecanje@znanstvenikumeni.org" target="_blank"><span class="fa fa-warning"></span> Zatražite pomoć</a>
 	</div>
 </div>
 

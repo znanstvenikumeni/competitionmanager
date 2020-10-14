@@ -23,6 +23,12 @@ class LogEntry{
         $this->data = $data;
         $this->user = $user;
         $this->session = $session;
+        if(!is_int($this->session) && !is_null($this->session)){
+            $Session = new Session($this->conn);
+            $Session->token = $this->session;
+            $Session->load();
+            $this->session = $Session->id;
+        }
         $this->save();
     }
 

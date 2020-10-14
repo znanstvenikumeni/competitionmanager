@@ -4,6 +4,7 @@
         "wildbit/postmark-php": "^2.8",
         "algolia/algoliasearch-client-php": "^2.5",
         "twilio/sdk": "^6.9",
-      "ext-json": "*"
+      "ext-json": "*",
+        "dompdf/dompdf": "^0.8.6"
     }
 }

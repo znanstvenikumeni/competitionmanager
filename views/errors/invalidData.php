@@ -336,7 +336,7 @@
 
   </div>
 	<div class="buttons-container single-button">
-		<a class="button" href="mailto:mbm@educateam.hr" target="_blank"><span class="fa fa-warning"></span> Prijavite problem</a>
+		<a class="button" href="mailto:natjecanje@znanstvenikumeni.org" target="_blank"><span class="fa fa-warning"></span> Prijavite problem</a>
 	</div>
 </div>
 

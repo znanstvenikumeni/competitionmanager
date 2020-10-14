@@ -73,7 +73,16 @@ class Session{
         $statement = $this->conn->prepare($query);
         $statement->execute($params);
     }
-
+    public function load(){
+        $query = "SELECT * FROM sessions WHERE token=:token";
+        $params['token'] = $this->token;
+        $statement = $this->conn->prepare($query);
+        $statement->execute($params);
+        $token = $statement->fetch(PDO::FETCH_ASSOC);
+        foreach($token as $key=>$value){
+            $this->$key = $value;
+        }
+    }
     public function verify(){
         $query = "SELECT * FROM sessions WHERE token=:token";
         $params['token'] = $this->token;

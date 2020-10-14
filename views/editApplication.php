@@ -77,7 +77,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         </select>
         
         <label for="drag-drop-area">Video zapis rada</label>
-        <?php if($Application->vmssID && ($route[2] ?? '' != 'video')){
+        <?php if($Application->vmssID && ($route[2] ?? '') != 'video'){
             $id = new HTMLString($route[1]);
             $id = $id->print();
             echo '<div>';
@@ -88,7 +88,8 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         else echo '<div id="drag-drop-area"></div>';
         ?>
         <hr>
-        <?php if($Application->pdf && ($route[2] ?? '' != 'pdf')){
+        <?php
+        if($Application->pdf && ($route[2] ?? '') != 'pdf'){
             $id = new HTMLString($route[1]);
             $id = $id->print();
             echo '<div>';
@@ -97,7 +98,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
             echo '</div>';
         }
         else {
-            if($Application->pdf) $stylePDF = 'style="display:none;"';
+            if(($route[2] ?? '') != 'pdf') $stylePDF = 'style="display:none;"';
             else $stylePDF = '';
             echo '<label for="pdfupload-area" '.$stylePDF.' class="pdf" >PDF rada</label>
         <div id="pdfupload-area" class="pdf" '.$stylePDF.'></div>
