@@ -327,7 +327,7 @@
     
     <p>
       <b>Dogodila se neočekivana pogreška.</b> Možda imamo tehničkih poteškoća, a možda nešto nije bilo u redu s prethodnim zahtjevom. <br><br>
-        <a href="/">Kliknite ovdje</a>
+        <a href="/">Kliknite ovdje</a> da biste pokušali ponovno. Ovaj problem je automatski prijavljen, ali ako trebate pomoć, slobodno nam se obratite.
     </p>
 
 
