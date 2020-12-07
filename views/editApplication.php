@@ -216,7 +216,10 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 
                <script>
+
 $('document').ready(function(){
+	 <?php if( ! ($Application->vmssID && ($route[2] ?? '') != 'video')){
+	 	?>
           var uppy = Uppy.Core().use(Uppy.Dashboard, {
           inline: true,
           target: '#drag-drop-area',
@@ -234,7 +237,9 @@ $('document').ready(function(){
 uppy.on('complete', (result) => {
         $('#vmssid').val(result.successful[0].response.body.id)
       })
-
+<?php } ?>
+		<?php  if(! ($Application->pdf && ($route[2] ?? '') != 'pdf')){
+		?>
           var uppy2 = Uppy.Core().use(Uppy.Dashboard, {
               inline: true,
               target: '#pdfupload-area',
@@ -253,6 +258,7 @@ uppy.on('complete', (result) => {
               $('#pdfid').val(result.successful[0].response.body.filename)
           })
 });
+<?php } ?>
           $( "#category" ).change(function(){
               if($("#category").val() === 'originalresearch') {
                   $('.pdf').css('display', 'block');
