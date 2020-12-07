@@ -257,8 +257,9 @@ uppy.on('complete', (result) => {
           uppy2.on('complete', (result) => {
               $('#pdfid').val(result.successful[0].response.body.filename)
           })
-});
 <?php } ?>
+});
+
           $( "#category" ).change(function(){
               if($("#category").val() === 'originalresearch') {
                   $('.pdf').css('display', 'block');
