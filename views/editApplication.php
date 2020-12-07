@@ -216,7 +216,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 
                <script>
-
+$('document').ready(function(){
           var uppy = Uppy.Core().use(Uppy.Dashboard, {
           inline: true,
           target: '#drag-drop-area',
@@ -252,7 +252,7 @@ uppy.on('complete', (result) => {
           uppy2.on('complete', (result) => {
               $('#pdfid').val(result.successful[0].response.body.filename)
           })
-
+});
           $( "#category" ).change(function(){
               if($("#category").val() === 'originalresearch') {
                   $('.pdf').css('display', 'block');
