@@ -149,7 +149,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         }
         ?>
         <label for="name2">Ime i prezime</label>
-        <input type="text" id="name2" name="name2" class="form-control" disabled  placeholder="Popunit će se automatski kad uneseš AAI."  value="<?php if($Competitor->firstName ?? '') HTMLString($Competitor->firstName.' '.$Competitor->lastName, true); ?>">
+        <input type="text" id="name2" name="name2" class="form-control" disabled  placeholder="Popunit će se automatski kad uneseš AAI."  value="<?php if($Competitor->firstName ?? '') new HTMLString($Competitor->firstName.' '.$Competitor->lastName, true); ?>">
         <label for="aai2">AAI drugog natjecatelja</label>
         <input type="text" id="aai2" name="aai2" class="form-control" onkeyup="aai(2)" value="<?php new HTMLString(json_decode($Application->teamMembers)->secondary->aai, true); ?>">
         <div id="aaiHelp2" style="display:none;">
