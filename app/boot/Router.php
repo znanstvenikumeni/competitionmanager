@@ -576,7 +576,7 @@ switch ($route[0]) {
         $User->lastName = $_POST['lastName'];
         $User->email = $_POST['email'];
         $User->phone = $_POST['phone'];
-        if (isset($_POST['password'])) {
+        if (isset($_POST['password']) && (($_POST['password'] ?? '') != '')) {
             $User->password = $_POST['password'];
             if (strlen($User->password) < 8) {
                 $InvalidData .= '<li>Lozinka mora imati 8 ili više znakova.</li>';
