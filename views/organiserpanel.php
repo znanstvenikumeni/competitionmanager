@@ -74,6 +74,7 @@
                   <br><br><b><a href="<?php echo $config->vmssBaseURL; echo '/'; new HTMLString($videoLink, true); ?>">Klikni da pogledaš video</a></b>
             </p>
                 <p class="card-text"><a href="/cdn/<?php new HTMLString($Application->data->pdf, true); ?>.pdf">PDF rada (ako je dostupan)</a></p>
+                <p class="card-text"><a href="/public/video/<?php new HTMLString($Application->id, true); ?>/<?php new HTMLString($config->juryAccessKey, true); ?>">Link za žiri na ZUM public</a></p>
               <p class="card-text">
               <?php if($Application->status == 1){
               ?>
