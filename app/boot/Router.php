@@ -59,8 +59,7 @@ switch ($route[0]) {
                     $Application = new Application($pdo);
                     $Application->id = $route[2];
                     $Application->load();
-                    if ($Application->year > $config->lastOrganisationalYearToShowOnPublic) {
-                        include '../views/errors/403.php';
+                    if ($Application->year > $config->lastOrganisationalYearToShowOnPublic && (($route[3] ?? '') != ($config->juryAccessKey ?? bin2hex(openssl_random_pseudo_bytes(16)))))  {                        include '../views/errors/403.php';
                         die();
                     }
                     if ($Application->status != 2) {
