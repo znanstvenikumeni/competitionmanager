@@ -74,6 +74,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         </select>
         <label for="drag-drop-area">Video zapis rada</label>
         <div id="drag-drop-area"></div>
+        <p>Video zapis mora biti ispod 500 MB, formata nekog od formata:  ".webm", ".mkv", ".avi", ".wmv", ".mov", ".mp4", ".m4v", ".mpg", ".mp2", ".mpeg", ".mpv", ".m2v", ".m4v"</p>
         <hr>
         <label for="pdfupload-area" class="pdf" style="display:none;">PDF rada</label>
         <div id="pdfupload-area" class="pdf" style="display:none;"></div>
