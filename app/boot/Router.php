@@ -827,7 +827,7 @@ switch ($route[0]) {
             $Competitor = new User($pdo);
             $Competitor->aai = $_POST['aai2'];
             $Competitor->load();
-            $TeamMembers['secondary']['aai'] = $_POST['aai2'];
+            $TeamMembers['secondary']['aai'] = trim($_POST['aai2']);
             $TeamMembers['secondary']['id'] = $Competitor->id;
             $TeamMembers['secondary']['school'] = $_POST['school2'];
             $TeamMembers['secondary']['age'] = $_POST['age2'];
@@ -842,7 +842,7 @@ switch ($route[0]) {
         }
 
         $Mentor = new User($pdo);
-        $Mentor->aai = $_POST['aaiMentor1'];
+        $Mentor->aai = trim($_POST['aaiMentor1']);
         $Mentors['first']['aai'] = $Mentor->aai;
         $Mentor->load();
         $Mentors['first']['name'] = $Mentor->firstName . ' ' . $Mentor->lastName;
@@ -850,7 +850,7 @@ switch ($route[0]) {
         else $MentorsValid = false;
         if ($_POST['aaiMentor2']) {
             $Mentor = new User($pdo);
-            $Mentor->aai = $_POST['aaiMentor2'];
+            $Mentor->aai = trim($_POST['aaiMentor2']);
             $Mentors['second']['aai'] = $Mentor->aai;
             $Mentor->load();
             $Mentors['second']['name'] = $Mentor->firstName . ' ' . $Mentor->lastName;
@@ -969,7 +969,7 @@ switch ($route[0]) {
         $TeamMembers['carrier']['zsem'] = $_POST['zsem1'];
         if ($_POST['aai2']) {
             $Competitor2 = new User($pdo);
-            $Competitor2->aai = $_POST['aai2'];
+            $Competitor2->aai = trim($_POST['aai2']);
             $TeamMembers['secondary']['aai'] = $Competitor2->aai;
             $Competitor2->load();
 
@@ -987,7 +987,7 @@ switch ($route[0]) {
             }
         }
         $Mentor1 = new User($pdo);
-        $Mentor1->aai = $_POST['aaiMentor1'];
+        $Mentor1->aai = trim($_POST['aaiMentor1']);
         if ($Mentor1->aai) {
             $Mentor1->load();
             if (!$Mentor1->firstName) {
@@ -1005,7 +1005,7 @@ switch ($route[0]) {
         $Mentors['first']['id'] = $Mentor1->id;
         $Mentors['first']['aai'] = $Mentor1->aai;
         $Mentor2 = new User($pdo);
-        $Mentor2->aai = $_POST['aaiMentor2'];
+        $Mentor2->aai = trim($_POST['aaiMentor2']);
         if ($Mentor2->aai) {
             $Mentor2->load();
             if (!$Mentor2->firstName) {
