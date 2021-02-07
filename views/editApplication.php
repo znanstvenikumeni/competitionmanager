@@ -200,7 +200,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
        <label for="nameMentor2">Ime i prezime drugog mentora</label>
         <input type="text" id="nameMentor2" name="nameMentor2" class="form-control" disabled  placeholder="Popunit će se automatski kad uneseš AAI."  value="<?php if($Mentor2->firstName ?? '') new HTMLString($Mentor2->firstName.' '.$Mentor2->lastName, true); ?>">
         <label for="aaiMentor2">AAI drugog mentora</label>
-        <input type="text" name="aaiMentor2" id="aaiMentor2" class="form-control" onkeyup="aai('Mentor2')" value="<?php new HTMLString($MentorData->secondary->aai, true); ?>">
+        <input type="text" name="aaiMentor2" id="aaiMentor2" class="form-control" onkeyup="aai('Mentor2')" value="<?php new HTMLString($MentorData->second->aai, true); ?>">
         <div id="aaiHelpMentor2" style="display:none;">
             <div class="alert alert-warning"><b>Poslat ćemo email na <span id="aaiDataMentor2"></span></b> i pozvati tvog mentora da se pridruži ovoj prijavi.</div>  
         </div>
