@@ -19,8 +19,8 @@
                 <img src="<?php echo $config->logoURL; ?>" class="logo">
                 <h1 class="hugetext">Prijavi se</h1>
                 <?php if(isset($msg)) echo $msg; ?>
-                <p>Za nastavak, potrebna je prijava u korisnički račun.</p>
-                <p><b>Nemaš korisnički račun?</b> <a href="/accounts/new">Registriraj se</a></p>
+                <p>Za nastavak, potrebna je prijava u korisnički račun. Ako se ne natječeš prvi put na ovom natjecanju, prijavi se postojećim podacima.</p>
+                <p><b>Prvi put se natječeš i nemaš korisnički račun?</b> <a href="/accounts/new">Registriraj se</a></p>
                 <p><b>Ne sjećaš se lozinke?</b> <a href="/accounts/recover">Postavi novu lozinku</a></p>
             </div>
         <div class="col-md-4">
@@ -30,12 +30,12 @@
             <label for="aai">AAI@EduHR email adresa na @skole.hr domeni</label>
             <input type="email" name="aai" id="aai" class="form-control" placeholder="npr. ivana.horvat@skole.hr">
         
-            <label for="password">Lozinka</label>
+            <label for="password">Lozinka za Znanstvenik u meni</label>
             <input type="password" name="password" id="password" class="form-control" placeholder="Unesite svoju lozinku." required>
             
             <button class="btn btn-primary" type="submit" required>Nastavi &rarr;</button>
             <br><br>
-            <small>Znanstvenik u meni! koristi kolačiće kako bi zapamtio tvoju prijavu. Nastavkom se slažeš s pohranom i korištenjem kolačića o tvojoj prijavi na okvirno 3 sata.</small>
+            <small>Znanstvenik u meni koristi kolačiće kako bi zapamtio tvoju prijavu. Nastavkom se slažeš s pohranom i korištenjem kolačića o tvojoj prijavi na okvirno 3 sata.</small>
         </form>
 
         </div>
