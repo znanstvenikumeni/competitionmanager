@@ -127,7 +127,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
 
         <label for="age1">Dob prvog natjecatelja</label>
         <input type="number" id="age1" class="form-control" name="age1" onkeyup="age('1')" value="<?php new HTMLString(json_decode($Application->teamMembers)->carrier->age, true); ?>" <?php echo $disabled; ?>>
-        <div id="agehelp1" style="display:none;">Budući da imaš manje od 16 godina, tvoji roditelji/skrbnici će morati potpisati <a href="/suglasnost">suglasnost</a> da sudjeluješ na natjecanju i poslati je na mbm@educateam.hr.</div>
+        <div id="agehelp1" style="display:none;">Budući da imaš manje od 16 godina, tvoji roditelji/skrbnici će morati potpisati <a href="/suglasnost">suglasnost</a> da sudjeluješ na natjecanju i poslati je na natjecanje@znanstvenikumeni.org.</div>
         <br>
        
         <label for="school1">Škola prvog natjecatelja</label>
@@ -157,7 +157,7 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         </div>
         <label for="age2">Dob drugog natjecatelja</label>
         <input type="number" id="age2" class="form-control" name="age2"  placeholder="Popunit će druga osoba."  onkeyup="age('2')" onkeyup="age('2')" value="<?php new HTMLString(json_decode($Application->teamMembers)->secondary->age, true); ?>" <?php echo $disabled; ?>>
-        <div id="agehelp2" style="display:none;">Budući da imaš manje od 16 godina, tvoji roditelji/skrbnici će morati potpisati <a href="/suglasnost">suglasnost</a> da sudjeluješ na natjecanju i poslati je na mbm@educateam.hr.</div>
+        <div id="agehelp2" style="display:none;">Budući da imaš manje od 16 godina, tvoji roditelji/skrbnici će morati potpisati <a href="/suglasnost">suglasnost</a> da sudjeluješ na natjecanju i poslati je na natjecanje@znanstvenikumeni.org.</div>
         <br>
         
         <label for="school2">Škola drugog natjecatelja</label>
