@@ -87,7 +87,9 @@ header('Access-Control-Allow-Origin: '.$config->vmssBaseURL);
         }
         else echo '<div id="drag-drop-area"></div>';
         ?>
+	<p>Video zapis mora biti ispod 500 MB, formata nekog od formata:  ".webm", ".mkv", ".avi", ".wmv", ".mov", ".mp4", ".m4v", ".mpg", ".mp2", ".mpeg", ".mpv", ".m2v", ".m4v"</p>
         <hr>
+
         <?php
         if($Application->pdf && ($route[2] ?? '') != 'pdf'){
             $id = new HTMLString($route[1]);
