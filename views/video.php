@@ -58,24 +58,24 @@
                 ?>
 
                 <video id="player" playsinline controls
-                       data-plyr-config='{ "quality": { default: 1080, options: [1080, 720, 480, 360] } }'>
-                    <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'1080p'}; ?>"
-                            size="1080" type="video/mp4"/>
-                    <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'720p'}; ?>" size="720"
-                            type="video/mp4"/>
-                    <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'480p'}; ?>" size="480"
-                            type="video/mp4"/>
-                    <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'360p'}; ?>" size="360"
-                            type="video/mp4"/>
+                       data-plyr-config='{ "quality": { default: 480, options: [1080, 720, 480, 360] } }'>
+                    <?php if($response->video->files->mp4->{'1080p'}) {?> <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'1080p'}; ?>"
+                            size="1080" type="video/mp4"/><?php } ?>
+                    <?php if($response->video->files->mp4->{'720p'}) {?><source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'720p'}; ?>" size="720"
+                            type="video/mp4"/><?php } ?>
+                   <?php if($response->video->files->mp4->{'480p'}) {?> <source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'480p'}; ?>" size="480"
+                            type="video/mp4"/><?php } ?>
+                    <?php if($response->video->files->mp4->{'360p'}) {?><source src="<?php echo $vmssBase . '/' . $response->video->files->mp4->{'360p'}; ?>" size="360"
+                            type="video/mp4"/><?php } ?>
 
-                    <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'1080p'}; ?>"
-                            size="1080" type="video/webm"/>
-                    <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'720p'}; ?>"
-                            size="720" type="video/webm"/>
-                    <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'480p'}; ?>"
-                            size="480" type="video/webm"/>
-                    <source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'360p'}; ?>"
-                            size="360" type="video/webm"/>
+                    <?php if($response->video->files->webm->{'1080p'}) {?><source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'1080p'}; ?>"
+                            size="1080" type="video/webm"/><?php } ?>
+                    <?php if($response->video->files->webm->{'720p'}) {?><source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'720p'}; ?>"
+                            size="720" type="video/webm"/><?php } ?>
+                    <?php if($response->video->files->webm->{'480p'}) {?><source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'480p'}; ?>"
+                            size="480" type="video/webm"/><?php } ?>
+                    <?php if($response->video->files->webm->{'360p'}) {?><source src="<?php echo $vmssBase . '/' . $response->video->files->webm->{'360p'}; ?>"
+                            size="360" type="video/webm"/><?php } ?>
 
                 </video>
                 <?php
