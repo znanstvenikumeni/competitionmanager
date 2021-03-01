@@ -111,7 +111,7 @@
                 <a href="https://znanstvenikumeni.org">&larr; Web stranica natjecanja</a>
             </li>
             <li class="navli">
-                <a href="/">Prijavljeni radovi</a>
+                <a href="/public">Prijavljeni radovi</a>
             </li>
             <li class="navli">
                 <a href="/accounts/signin">Prijavi se</a>
