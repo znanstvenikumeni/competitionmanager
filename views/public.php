@@ -122,7 +122,11 @@
 <main class="container">
     <section class="introduction">
         <div id="app">
-            <div id="videos">
+            <div id="videos-2020">
+                <h1 class="hugetext">Radovi prijavljeni u 2020.</h1>
+                <p>Radovi su poredani od najnovijeg prema najstarijem.</p>
+            </div>
+             <div id="videos-2019">
                 <h1 class="hugetext">Radovi prijavljeni u 2019.</h1>
                 <p>Radovi su poredani od najnovijeg prema najstarijem.</p>
             </div>
@@ -143,7 +147,9 @@
     }
     function parseVideo(video){
         videoHTML = `<div class="row breather" onclick="openVideo(${video.id})"><div class="col-md-4" id="thumb-${video.vmssID}"></div><div class="col-md-8"><h2>${video.title}</h2><p class="description">${video.description}</p></div></div>`;
-        document.getElementById("videos").insertAdjacentHTML("beforeend", videoHTML);
+        if(video.year == 2020) { document.getElementById("videos-2020").insertAdjacentHTML("beforeend", videoHTML); }
+        if(video.year == 2019) { document.getElementById("videos-2019").insertAdjacentHTML("beforeend", videoHTML); }
+
         fetch('https://vmss.znanstvenikumeni.org/video/'+video.vmssID).then(response=>response.json()).then(data=> {
             videoData = JSON.parse(data.video.data);
             console.log(videoData, data);
