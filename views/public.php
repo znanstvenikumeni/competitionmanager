@@ -96,7 +96,7 @@
         }
         #public-voting a, #public-voting a:visited, #public-voting a:link{
             color: #EDEDED;
-           background-image: linear-gradient(#0C4A6E 50%, #e07138 50%);
+            background: linear-gradient(#0C4A6E 50%, #e07138 50%);
             text-decoration: none;
             background-position-y: 0%;
             padding-top: 5px;
