@@ -89,7 +89,11 @@
             0% { transform: rotate(0deg); transform: rotate(0deg); }
             100% { transform: rotate(360deg); transform: rotate(360deg); }
         }
-
+        #public-voting{
+            background-color: #7DD3FC;
+            padding: 32px;
+            border-radius: 8px;
+        }
     </style>
 <body class="frontpage">
 
@@ -130,6 +134,7 @@
                     <h2>Javno glasanje</h2>
                     <p>Javno glasanje za radove prijavljene na Znanstvenik u meni 2020. otvoreno je do 7. ožujka 2021. u 13:00. Možete glasati za do pet radova iz komunikacijskih kategorija i za do pet radova iz kategorije Originalni istraživački rad.</p>
                     <p>Možete glasati samo jednom, a za glasanje je potreban Google račun. <a href="https://forms.gle/nqtcnLw6Cx6b7PWP7">Kliknite ovdje kako biste glasali</a> ili posjetite https://forms.gle/nqtcnLw6Cx6b7PWP7. Sretno!</p>
+            </div>
             </div>
              <div id="videos-2019">
                 <h1 class="hugetext">Radovi prijavljeni u 2019.</h1>
