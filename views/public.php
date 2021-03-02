@@ -95,7 +95,8 @@
             border-radius: 8px;
         }
         #public-voting a, #public-voting a:visited, #public-voting a:link{
-           background-image: linear-gradient(#170B06 50%, #e07138 50%);
+            color: #EDEDED;
+           background-image: linear-gradient(#0C4A6E 50%, #e07138 50%);
             text-decoration: none;
             background-position-y: 0%;
             padding-top: 5px;
