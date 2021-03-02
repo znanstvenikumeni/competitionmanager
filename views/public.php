@@ -90,7 +90,7 @@
             100% { transform: rotate(360deg); transform: rotate(360deg); }
         }
         #public-voting{
-            background-color: #7DD3FC;
+            background-color: #0C4A6E;
             padding: 32px;
             border-radius: 8px;
         }
