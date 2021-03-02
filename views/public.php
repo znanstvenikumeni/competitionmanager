@@ -94,6 +94,18 @@
             padding: 32px;
             border-radius: 8px;
         }
+        #public-voting a, #public-voting a:visited, #public-voting a:link{
+           background-image: linear-gradient(#170B06 50%, #e07138 50%);
+            text-decoration: none;
+            background-position-y: 0%;
+            padding-top: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-bottom: 5px;
+            transition: background 500ms ease;
+            background-size: 2px;
+            background-size: auto 175%;
+        }
     </style>
 <body class="frontpage">
 
