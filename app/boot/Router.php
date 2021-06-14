@@ -313,6 +313,7 @@ switch ($route[0]) {
         include '../views/mentorpanel.php';
         break;
     case 'organisermentorview':
+        try{
         $Session = new Session($pdo);
         $Session->token = $_COOKIE['cmsession'];
         if (!$Session->verify()) {
@@ -330,6 +331,10 @@ switch ($route[0]) {
         $Applications = $Application->byMentor($route[1]);
         include '../views/organiserpanel.php';
         break;
+        }
+        catch(\Exception $e){
+            var_dump($route);
+        }
     case 'organiserpanel':
         $Session = new Session($pdo);
         $Session->token = $_COOKIE['cmsession'];
