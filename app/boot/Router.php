@@ -312,6 +312,24 @@ switch ($route[0]) {
         }
         include '../views/mentorpanel.php';
         break;
+    case 'organisermentorview':
+        $Session = new Session($pdo);
+        $Session->token = $_COOKIE['cmsession'];
+        if (!$Session->verify()) {
+            new LogEntry($pdo, 'SessionSecurity', 'SessionValidationForProtectedPage', 'failed', null, $Session->user, $_COOKIE['cmsession']);
+            header('Location: /accounts/signin');
+            die();
+        }
+        $User = new User($pdo);
+        $User->id = $Session->user;
+        $User->load();
+        if (stripos($User->aai, "@" . $config->adminDomain) != strlen($User->aai) - strlen('@' . $config->adminDomain)) {
+            header('Location: /dashboard');
+            die();
+        }
+        $Applications = $Application->byMentor($route[1]);
+        include '../views/organiserpanel.php';
+        break;
     case 'organiserpanel':
         $Session = new Session($pdo);
         $Session->token = $_COOKIE['cmsession'];
