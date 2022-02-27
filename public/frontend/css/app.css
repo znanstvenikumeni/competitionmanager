@@ -38,7 +38,7 @@ input.form-control:active, input.form-control:focus, textarea:active, textarea:f
 }
 
 input.is-invalid:active, input.is-invalid:focus {
-  background-position: center right calc(.375em + .1875rem);
+  background-position: center right calc(0.375em + 0.1875rem);
   background-color: #e07138 !important;
 }
 
@@ -74,6 +74,41 @@ label {
 
 .bg-dark {
   background-color: #170B06 !important;
+}
+
+.flex {
+  display: flex;
+}
+.flex--align-center {
+  align-items: center;
+}
+
+.icon svg {
+  height: 1rem;
+  padding-right: 0.5rem;
+}
+
+nav ul {
+  display: flex;
+  overflow-y: auto;
+}
+nav ul .navli {
+  flex-shrink: 0;
+}
+
+.component-application-steps {
+  list-style-type: none;
+  padding-left: 0;
+}
+.component-application-steps__step {
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.component-application-steps__step:hover {
+  text-decoration: underline;
+}
+.component-application-steps .is-active {
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=app.css.map */

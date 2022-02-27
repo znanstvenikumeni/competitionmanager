@@ -70,3 +70,40 @@ label{
 .bg-dark{
   background-color: variables_cm.$blackBackground !important;
 }
+.flex {
+  display: flex;
+  &--align-center {
+    align-items: center;
+  }
+}
+.icon {
+  svg {
+    height: 1rem;
+    padding-right: 0.5rem;
+  }
+}
+nav ul {
+  display: flex;
+  overflow-y: auto;
+  .navli {
+    flex-shrink: 0;
+  }
+}
+
+.component-application-steps {
+  list-style-type: none;
+  padding-left: 0;
+
+  &__step {
+    margin-bottom: 8px;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  & .is-active {
+    font-weight: bold;
+  }
+}
