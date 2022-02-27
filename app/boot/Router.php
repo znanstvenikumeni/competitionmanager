@@ -14,7 +14,6 @@ if ($config->publicAccessEnabled == true && $config->applicationsEnabled == fals
         die();
     }
 }
-
 switch ($route[0]) {
     case '':
         if (isset($_COOKIE['cmsession'])) {
@@ -251,7 +250,7 @@ switch ($route[0]) {
             if ($PhoneVerified) {
                 header('Location: /dashboard');
             }
-            if ($route[2] == 'invalid') {
+            if ($route[2] ?? '' == 'invalid') {
                 $Message = '<b>Nevaljan kod. Pokušaj ponovno.</b>';
             } else {
                 $Message = '';
@@ -776,7 +775,16 @@ switch ($route[0]) {
             }
             $Token = new Token($pdo, null, $User->id, $Session->id, 'editApplication');
             $formtoken = $Token->get();
-            $EndpointURL = file_get_contents($config->vmssAuthEndpoint);
+            try {
+                $EndpointURL = file_get_contents($config->vmssAuthEndpoint);
+                if ($EndpointURL === false) {
+                    throw new \Exception('VMSS auth failed');
+                }
+            }
+            catch (\Throwable $throwable) {
+                $bugsnag->notifyException($throwable);
+                $vmssUnavailable = true;
+            }
             $EndpointURL = $config->vmssBaseURL . $EndpointURL;
             include '../views/editApplication.php';
         }
