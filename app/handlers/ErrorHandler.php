@@ -1,6 +1,7 @@
 <?php
 function handleError($errno, $errstr, $errfile, $errline)
 {
+    include __DIR__.'/../boot/ConfigBoot.php';
     if (!(error_reporting() & $errno)) {
         return false;
     }

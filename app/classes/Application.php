@@ -141,6 +141,6 @@ class Application{
             $this->$key = $value;
         }
         $this->data = json_decode($this->data);
-        $this->pdf = $this->data->pdf;
+        $this->pdf = $this->data->pdf ?? null;
     }
 }

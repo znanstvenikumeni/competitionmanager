@@ -8,11 +8,12 @@ class ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
+        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        '979dffec6fa5205cabd2c2cd1e9e6b3a' => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src/Http/Psr7/functions.php',
-        '6783aef8c489bbc166eee2536fe605d5' => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -20,10 +21,14 @@ class ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c
         array (
             'Twilio\\' => 7,
         ),
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Php72\\' => 23,
+            'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
+            'Symfony\\Polyfill\\Intl\\Idn\\' => 26,
+        ),
         'P' => 
         array (
-            'Psr\\SimpleCache\\' => 16,
-            'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
         ),
         'G' => 
@@ -40,10 +45,6 @@ class ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c
         array (
             'Bugsnag\\' => 8,
         ),
-        'A' => 
-        array (
-            'Algolia\\AlgoliaSearch\\' => 22,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -51,13 +52,17 @@ class ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c
         array (
             0 => __DIR__ . '/..' . '/twilio/sdk/src/Twilio',
         ),
-        'Psr\\SimpleCache\\' => 
+        'Symfony\\Polyfill\\Php72\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php72',
         ),
-        'Psr\\Log\\' => 
+        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
+        ),
+        'Symfony\\Polyfill\\Intl\\Idn\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-idn',
         ),
         'Psr\\Http\\Message\\' => 
         array (
@@ -83,10 +88,6 @@ class ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c
         array (
             0 => __DIR__ . '/..' . '/bugsnag/bugsnag/src',
         ),
-        'Algolia\\AlgoliaSearch\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src',
-        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -99,12 +100,18 @@ class ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c
         ),
     );
 
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitb0c8761d4a3963b1169818d2ea8e455c::$classMap;
 
         }, null, ClassLoader::class);
     }

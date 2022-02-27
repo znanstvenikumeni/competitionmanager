@@ -1,10 +1,8 @@
 {
-    "require": {
-        "bugsnag/bugsnag": "^3.0",
-        "wildbit/postmark-php": "^2.8",
-        "algolia/algoliasearch-client-php": "^2.5",
-        "twilio/sdk": "^6.9",
-      "ext-json": "*",
-        "dompdf/dompdf": "^0.8.6"
-    }
+  "require": {
+    "bugsnag/bugsnag": "^3.0",
+    "wildbit/postmark-php": "^2.8",
+    "twilio/sdk": "^6.9",
+    "ext-json": "*"
+  }
 }

@@ -3,6 +3,7 @@
 namespace Bugsnag;
 
 use Bugsnag\Breadcrumbs\Breadcrumb;
+use Bugsnag\DateTime\Date;
 use Exception;
 use InvalidArgumentException;
 use Throwable;
@@ -10,18 +11,25 @@ use Throwable;
 class Report
 {
     /**
-     * The payload version.
+     * The payload version for the error notification API.
      *
-     * @var string
+     * @deprecated Use {HttpClient::NOTIFY_PAYLOAD_VERSION} instead.
      */
-    const PAYLOAD_VERSION = HttpClient::PAYLOAD_VERSION;
+    const PAYLOAD_VERSION = HttpClient::NOTIFY_PAYLOAD_VERSION;
 
     /**
      * The config object.
      *
-     * @var \Bugsnag\Config
+     * @var \Bugsnag\Configuration
      */
     protected $config;
+
+    /**
+     * The original error.
+     *
+     * @var \Throwable|array|null
+     */
+    protected $originalError;
 
     /**
      * The associated stacktrace.
@@ -197,7 +205,17 @@ class Report
     protected function __construct(Configuration $config)
     {
         $this->config = $config;
-        $this->time = gmdate('Y-m-d\TH:i:s\Z');
+        $this->time = Date::now();
+    }
+
+    /**
+     * Get the original error.
+     *
+     * @return \Throwable|array|null
+     */
+    public function getOriginalError()
+    {
+        return $this->originalError;
     }
 
     /**
@@ -214,6 +232,8 @@ class Report
         if (!$throwable instanceof Throwable && !$throwable instanceof Exception) {
             throw new InvalidArgumentException('The throwable must implement Throwable or extend Exception.');
         }
+
+        $this->originalError = $throwable;
 
         $this->setName(get_class($throwable))
              ->setMessage($throwable->getMessage())
@@ -239,6 +259,14 @@ class Report
      */
     public function setPHPError($code, $message, $file, $line, $fatal = false)
     {
+        $this->originalError = [
+            'code' => $code,
+            'message' => $message,
+            'file' => $file,
+            'line' => $line,
+            'fatal' => $fatal,
+        ];
+
         if ($fatal) {
             // Generating stacktrace for PHP fatal errors is not possible,
             // since this code executes when the PHP process shuts down,
@@ -359,7 +387,7 @@ class Report
      */
     public function setName($name)
     {
-        if (is_scalar($name) || method_exists($name, '__toString')) {
+        if (is_scalar($name) || (is_object($name) && method_exists($name, '__toString'))) {
             $this->name = (string) $name;
         } else {
             throw new InvalidArgumentException('The name must be a string.');
@@ -395,7 +423,10 @@ class Report
     {
         if ($message === null) {
             $this->message = null;
-        } elseif (is_scalar($message) || method_exists($message, '__toString')) {
+        } elseif (
+            is_scalar($message)
+            || (is_object($message) && method_exists($message, '__toString'))
+        ) {
             $this->message = (string) $message;
         } else {
             throw new InvalidArgumentException('The message must be a string.');
@@ -614,6 +645,39 @@ class Report
     }
 
     /**
+     * Get a list of all errors in a fixed format of:
+     * - 'errorClass'
+     * - 'errorMessage'
+     * - 'type' (always 'php').
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        $errors = [$this->toError()];
+        $previous = $this->previous;
+
+        while ($previous) {
+            $errors[] = $previous->toError();
+            $previous = $previous->previous;
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @return array
+     */
+    private function toError()
+    {
+        return [
+            'errorClass' => $this->name,
+            'errorMessage' => $this->message,
+            'type' => 'php',
+        ];
+    }
+
+    /**
      * Get the array representation.
      *
      * @return array
@@ -625,7 +689,7 @@ class Report
             'device' => array_merge(['time' => $this->time], $this->config->getDeviceData()),
             'user' => $this->getUser(),
             'context' => $this->getContext(),
-            'payloadVersion' => HttpClient::PAYLOAD_VERSION,
+            'payloadVersion' => HttpClient::NOTIFY_PAYLOAD_VERSION,
             'severity' => $this->getSeverity(),
             'exceptions' => $this->exceptionArray(),
             'breadcrumbs' => $this->breadcrumbs,
@@ -721,11 +785,21 @@ class Report
      */
     protected function shouldFilter($key, $isMetaData)
     {
-        if ($isMetaData) {
-            foreach ($this->config->getFilters() as $filter) {
-                if (strpos($key, $filter) !== false) {
-                    return true;
-                }
+        if (!$isMetaData) {
+            return false;
+        }
+
+        foreach ($this->config->getFilters() as $filter) {
+            if (stripos($key, $filter) !== false) {
+                return true;
+            }
+        }
+
+        foreach ($this->config->getRedactedKeys() as $redactedKey) {
+            if (@preg_match($redactedKey, $key) === 1) {
+                return true;
+            } elseif (Utils::stringCaseEquals($redactedKey, $key)) {
+                return true;
             }
         }
 
