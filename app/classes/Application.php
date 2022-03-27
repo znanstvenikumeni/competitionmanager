@@ -91,6 +91,9 @@ class Application{
         if($this->id){
             $params['id'] = $this->id;
         }
+        if(!$this->data) {
+            $this->data = new \stdClass();
+        }
         $params['title'] = $this->title;
         $params['description'] = $this->description;
         $params['vmssID'] = $this->vmssID;
