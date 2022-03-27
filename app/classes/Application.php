@@ -98,8 +98,8 @@ class Application{
         $params['teamMembers'] = $this->teamMembers;
         $params['status'] = $this->status;
         $params['year'] = $this->year;
-        $params['data'] = $this->data;
-        $this->pdf = $this->data['pdf'];
+        $this->data->pdf = $this->pdf;
+        $params['data'] = json_encode($this->data);
         return $params;
     }
 
