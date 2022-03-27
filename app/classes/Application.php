@@ -94,7 +94,7 @@ class Application{
         if(!$this->data) {
             $this->data = new \stdClass();
         }
-        if ($this->data instanceof \stdClass)  {
+        if (!($this->data instanceof \stdClass))  {
             $this->data = json_decode($this->data);
         }
         $params['title'] = $this->title;
