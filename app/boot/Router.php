@@ -935,7 +935,7 @@ switch ($route[0]) {
         }
         $Application->status = $status;
         $Application->save();
-        if (count($errors)) {
+        if (count($errors ?? [])) {
             include '../views/applicationSubmissionError.php';
         } elseif ($status == 2) {
             $EmailData['date'] = date('j. n. Y.');
