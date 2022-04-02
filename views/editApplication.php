@@ -141,7 +141,6 @@ header('Access-Control-Allow-Origin: ' . $config->vmssBaseURL);
                             <p>Svi podaci koje upišeš u ovom koraku, kao i video zapis tvog rada i PDF bit će javno vidljivi.</p>
                         </div>
                     </div>
-            </div>
             <div class="contestantData" style="display:none;" data-aos="fade-up" x-show="step === 'contestantData'">
                 <h1 class="morebreathingspace">Podaci o natjecateljima</h1>
                 <b>Natjecatelj 1</b><br>
@@ -253,6 +252,7 @@ header('Access-Control-Allow-Origin: ' . $config->vmssBaseURL);
                 </div>
             </div>
         </div>
+       </div>
         <script src="https://transloadit.edgly.net/releases/uppy/v1.3.0/uppy.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
