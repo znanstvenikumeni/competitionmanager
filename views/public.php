@@ -140,6 +140,15 @@
     <section class="introduction">
         <div id="app">
             
+        <div id="videos-2021">
+                <h1 class="hugetext">Radovi prijavljeni na Znanstvenik u meni 4</h1>
+                <p>Radovi su poredani od najnovije prijavljenog.</p>
+                <div id="public-voting">
+                    <h2>Javno glasanje</h2>
+                    <p>Javno glasanje za radove prijavljene na Znanstvenik u meni 4 bit će otvoreno čim obradimo sve videozapise.</p>
+                </div>
+            </div>
+
             <div id="videos-2020">
                 <h1 class="hugetext">Radovi prijavljeni u 2020.</h1>
                 <p>Radovi su poredani od najnovijeg prema najstarijem.</p>
@@ -147,7 +156,7 @@
                     <h2>Javno glasanje</h2>
                     <p>Javno glasanje za radove prijavljene na Znanstvenik u meni 2020. otvoreno je do 7. ožujka 2021. u 13:00. Možete glasati za do pet radova iz komunikacijskih kategorija i za do pet radova iz kategorije Originalni istraživački rad.</p>
                     <p>Možete glasati samo jednom, a za glasanje je potreban Google račun. <a href="https://forms.gle/nqtcnLw6Cx6b7PWP7">Kliknite ovdje kako biste glasali</a> ili posjetite https://forms.gle/nqtcnLw6Cx6b7PWP7. Sretno!</p>
-            </div>
+                </div>
             </div>
              <div id="videos-2019">
                 <h1 class="hugetext">Radovi prijavljeni u 2019.</h1>
@@ -170,6 +179,7 @@
     }
     function parseVideo(video){
         videoHTML = `<div class="row breather" onclick="openVideo(${video.id})"><div class="col-md-4" id="thumb-${video.vmssID}"></div><div class="col-md-8"><h2>${video.title}</h2><p class="description">${video.description}</p></div></div>`;
+        if(video.year == 2021) { document.getElementById("videos-2021").insertAdjacentHTML("beforeend", videoHTML); }
         if(video.year == 2020) { document.getElementById("videos-2020").insertAdjacentHTML("beforeend", videoHTML); }
         if(video.year == 2019) { document.getElementById("videos-2019").insertAdjacentHTML("beforeend", videoHTML); }
 
