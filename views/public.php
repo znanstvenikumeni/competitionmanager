@@ -145,7 +145,9 @@
                 <p>Radovi su poredani od najnovije prijavljenog.</p>
                 <div id="public-voting">
                     <h2>Javno glasanje</h2>
-                    <p>Javno glasanje za radove prijavljene na Znanstvenik u meni 4 bit će otvoreno čim obradimo sve videozapise.</p>
+                    <p>Javno glasanje za radove prijavljene na Znanstvenik u meni 4 je u tijeku od 23. travnja 2022. do 3. svibnja 2022. u 12:00.</p>
+                    <p><a href="https://forms.gle/ZqwotQLvGmfjtxUq5">Možete glasati koristeći Google Forms</a> za do pet radova iz komunikacijskih kategorija i do pet radova iz kategorije Originalni istraživački radovi.</p>
+                    <p>Posjetite <a href="https://forms.gle/ZqwotQLvGmfjtxUq5">obrazac za glasanje &rarr;</a> kako biste glasali.
                 </div>
             </div>
 
