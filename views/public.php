@@ -145,7 +145,8 @@
                 <p>Radovi su poredani od najnovije prijavljenog.</p>
                 <div id="public-voting">
                     <h2>Javno glasanje</h2>
-                    <p>Informacije o javnom glasanju bit će objavljene uskoro.</p>
+                    <p>Javno glasanje za radove prijavljene na Znanstvenik u meni 5 traje od 12. travnja 2023. do 19. travnja 2023. u 12:00.</p>
+                    <p><a href="https://forms.gle/UapYk8vm6SYkeSML9">Možete glasati koristeći Google Forms</a> za do tri rada iz komunikacijskih kategorija i jedan rad iz kategorije Originalni istraživački radovi.</p>
                 </div>
             </div>
             
